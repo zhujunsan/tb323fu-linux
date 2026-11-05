@@ -16,7 +16,7 @@ SPDX-License-Identifier = "MIT"
 [[annotations]]
 path = "custom/patches/**/*.patch"
 precedence = "override"
-SPDX-FileCopyrightText = ["2026 Akhil P Oommen", "2026 Xilin Wu"]
+SPDX-FileCopyrightText = "The authors named in each patch (From:, Signed-off-by:; see docs/PATCH-STATUS.md)"
 SPDX-License-Identifier = "GPL-2.0-only"
 
 # Copyright of the project-written files (NOTICE: held by Joonhoe Kim unless a file

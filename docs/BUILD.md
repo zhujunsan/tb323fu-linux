@@ -11,7 +11,7 @@ bash custom-build/ci/install-deps.sh
 bash custom-build/scripts/build-kernel.sh baseline
 # Only after the baseline succeeds and config review is complete:
 bash custom-build/scripts/build-kernel.sh integration
-# Separate fresh directory per selection; all four are enabled by default.
+# Separate fresh directory per selection; all five are enabled by default.
 BUILD_WORK=/absolute/path/gpu-only PATCH_IDS=1046,1047,1048 bash custom-build/scripts/build-kernel.sh integration
 BUILD_WORK=/absolute/path/video-only PATCH_IDS=1052 bash custom-build/scripts/build-kernel.sh integration
 ```
@@ -38,8 +38,11 @@ included. Packaging an Android boot image later requires the user's own stock
 image and upstream tooling; this job performs no partition writes.
 
 CI builds the baseline, then builds the testing integration only if baseline
-succeeds. The first batch enables GPU 1046/1047/1048 and Iris 1052; 1041,
-1053, 1057 and fsck remain disabled. No release is published automatically.
+succeeds. The default batch enables Wi-Fi 1041, GPU 1046/1047/1048 and Iris 1052;
+1053, 1057 and fsck remain disabled. Wi-Fi is included per the owner's preference
+for power savings; actual power/throughput impact is unmeasured. Set
+`PATCH_IDS=1046,1047,1048,1052` for a no-Wi-Fi-patch comparison build in a fresh
+work directory. No release is published automatically.
 The workflow is triggered by relevant pushes to integration/gnome. A manual
 workflow_dispatch entry exists, but GitHub's manual workflow discovery requires
 the workflow to be present on the default branch; keep main pristine and use

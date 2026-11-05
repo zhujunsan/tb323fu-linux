@@ -1,6 +1,7 @@
 {
   "scope": "independent checks on P0-touched files only",
   "integrated_series_applies": [
+    "custom/patches/wifi/1041-ath12k-sta-ps-vif-cfg.patch",
     "custom/patches/gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
     "custom/patches/gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
     "custom/patches/gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",

@@ -53,7 +53,7 @@ jobs:
       - uses: actions/checkout@v7
       - name: Install native ARM64 build dependencies
         run: bash custom-build/ci/install-deps.sh
-      - name: Build reviewed GPU and Iris fixes with Ubuntu security config
+      - name: Build Wi-Fi power saving, GPU and Iris fixes with Ubuntu security config
         env:
           BUILD_JOBS: '2'
         run: bash custom-build/scripts/build-kernel.sh integration

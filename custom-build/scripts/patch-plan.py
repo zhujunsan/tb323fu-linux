@@ -28,7 +28,7 @@ for path in series:
     target = (root / path).resolve()
     if not target.is_relative_to(root.resolve()):
         raise SystemExit('Patch path escapes patch directory')
-    if hashlib.sha256(target.read_bytes()).hexdigest() != candidate['sha256']:
+    if hashlib.sha256(target.read_bytes()).hexdigest() != candidate.get('local_sha256', candidate['sha256']):
         raise SystemExit(f'Patch checksum mismatch: {path}')
     if candidate['id'] in selected:
         print(target)

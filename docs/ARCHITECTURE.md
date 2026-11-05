@@ -8,7 +8,7 @@ Never merge the downstream repository wholesale or rewrite existing history.
 - `custom/manifests/sources.json`: exact project/Linux/downstream identities,
   upstream patch hashes and P0 candidate/import status.
 - `custom/patches/series`: explicitly ordered extra patches; first batch is
-  GPU 1046/1047/1048 followed by Iris 1052, enabled for testing only.
+  Wi-Fi 1041, GPU 1046/1047/1048 followed by Iris 1052, enabled for testing only.
 - `custom/config/`: integration fragments, starting with Ubuntu security.
 - `custom-build/scripts/`: scoped source audit and native ARM64 build driver.
 - `custom-build/ci/`: build-host provisioning.

@@ -165,10 +165,23 @@
       "id": "1041",
       "path": "linux/kernel-y16/patches/1041-ath12k-sta-ps-vif-cfg.patch",
       "sha256": "0594e1a4392292e7429ebbb1b872d0fcec546cd55a213e8f82134cdd2f345390",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending",
+      "device": "not-tested",
+      "local_patch": "wifi/1041-ath12k-sta-ps-vif-cfg.patch",
+      "local_sha256": "3057d092c1850f2cd18cccd5c24554bd383f815c9d9e4f57ec46a4f4ee069cf5",
+      "author": "y700 workspace",
+      "license": "GPL-2.0-only",
+      "risk": "high",
+      "validated": "2026-11-05",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "adaptations": [
+        "Omit personal downstream MODULE_VERSION marker; functional changes unchanged"
+      ],
+      "decision": "Owner prioritizes power saving over potential throughput loss; enabled for testing, no measured gain or hardware validation"
     },
     {
       "id": "1046",
