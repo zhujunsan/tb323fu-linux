@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: MIT
+name: Custom kernel baseline
+on:
+  push:
+    branches: [integration/gnome]
+    paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: custom-kernel-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Audit locked P0 candidates
+        run: python3 custom-build/scripts/audit-p0.py
+  baseline:
+    needs: audit
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+      - name: Record runner capacity
+        run: |
+          uname -a
+          free -h
+          df -h
+      - name: Install native ARM64 build dependencies
+        run: bash custom-build/ci/install-deps.sh
+      - name: Build unchanged upstream kernel with unique CI identity
+        env:
+          BUILD_JOBS: '2'
+        run: bash custom-build/scripts/build-kernel.sh baseline
+      - name: Preserve artifacts and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-baseline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/build-baseline/artifacts/
+            out/build-baseline/build.log
+            out/build-baseline/kout/.config
+          include-hidden-files: true
+          retention-days: 14

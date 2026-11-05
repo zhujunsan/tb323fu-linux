@@ -1,0 +1,47 @@
+{
+  "scope": "independent checks on P0-touched files only",
+  "results": [
+    {
+      "id": "1041",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1046",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1047",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1048",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1052",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1053",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    },
+    {
+      "id": "1057",
+      "forward_applies": true,
+      "reverse_applies": false,
+      "forward_diagnostics": ""
+    }
+  ]
+}

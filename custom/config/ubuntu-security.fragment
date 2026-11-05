@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Integration profile only; the baseline profile uses upstream fragments as-is.
+CONFIG_SECURITY_APPARMOR=y
+CONFIG_SECURITY_APPARMOR_BOOTPARAM_VALUE=1
+CONFIG_LSM="landlock,lockdown,yama,integrity,apparmor,bpf"
