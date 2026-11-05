@@ -5,7 +5,9 @@ Upstream project: `2ba0908546b482792d3bf03a102799060b90553e`; Linux:
 `v7.3`, `c03c1a14507dfaf8b856c2608f9ac216021fc222`. Downstream reference:
 `4240ea715133574fd335f2e1631a450f09c8c16e` (y16 patches; y17 initramfs).
 
-All candidates are disabled. No candidate has been built or tested on our device.
+1046, 1047, 1048 and 1052 are now imported byte-for-byte and enabled in the
+**testing integration** profile. No candidate has completed a build or been
+tested on our device. The upstream baseline profile includes none of them.
 No deep power experiments or downstream complete configuration are imported.
 
 ## Method and limits
@@ -32,6 +34,30 @@ these exact fixes already being carried, not a search of all Linux maintainer tr
 | 1053 | y16 `1053-soc-qcom-smp2p-reset-inbound-state-only-on-restart.patch`; Armada placeholder author; original armada commit `dac08dfe0a72`, virtudude | Inbound `last_value` cleared even when `restart` is false | Candidate, medium: small correctness fix; author attribution and licensing must be resolved before import. Do not claim power savings: source describes ready completion replay without an extra wakeup on v7.3. |
 | 1057 | y16 `1057-media-iris-vpu4x-size-the-AV1-line-buffer-for-10-bit-output.patch`; y700 workspace | Upstream 0111 handles HEVC/VP9, but AV1 still calls shared helper without bit depth | Hold, high: not a duplicate of 0111. Downstream describes fitted buffer-size inference, not a firmware specification. Require 8/10-bit, 64/128 superblock, resolution and decoder comparison tests. |
 | y17 fsck | `linux/kernel-y17/init`, `NOTES.md`, `kbuild-y17.sh` | Current upstream has no equivalent `rootfsck` function | Redesign before import, high: state journal replay occurs before trial count; full check after count; errors/timeouts still proceed to mount. `orphan_file` limitation is documented downstream. Define exit-bit policy, timeout recovery, trial-state failure handling, and static e2fsck provenance; test on disposable images only. |
+
+## First imported batch
+
+The four imported patches are in `custom/patches/{gpu,video}/` and the canonical
+`series`; they retain their original headers, authors and signoffs. The manifest
+records each original path, checksum, author, risk, enablement and pending build
+status. The decisions marked "Candidate" above describe the audit assessment;
+these four are now candidates enabled for testing, not hardware-validated stable fixes.
+
+1052 was independently compared with Radxa's `v1.1.1`
+`patches/0005-media-iris-Recycle-decoder-buffers-for-non-display-p.patch`:
+both have stable patch-id `4b3ee730970952776d2a8ebbf6ba2fc987217a7c`.
+The original Radxa patch names commit `841f40bbd2c8aedb2d7fb003ba67ce78b5d04209`.
+GPU patches retain Qualcomm author/reviewer headers and Patchwork references
+755589/755592/755593. Those web pages could not be retrieved during this pass;
+no claim is made that the carried versions equal the latest maintainer versions.
+Their exact changes remain absent from our locked project baseline and their
+code changes are small enough for direct review against it.
+
+Run the audit to check the four patches independently and then in series order.
+Use `PATCH_IDS=1046,1047,1048` to build GPU only, `PATCH_IDS=1052` for video only,
+or an individual ID. Empty `PATCH_IDS` disables every extra patch but retains
+the integration security config. Unknown IDs and checksum drift fail closed.
+The default is all four in canonical order; callers cannot reorder the series.
 
 ## Provenance and dependencies
 

@@ -1,5 +1,11 @@
 {
   "scope": "independent checks on P0-touched files only",
+  "integrated_series_applies": [
+    "custom/patches/gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
+    "custom/patches/gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
+    "custom/patches/gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",
+    "custom/patches/video/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch"
+  ],
   "results": [
     {
       "id": "1041",

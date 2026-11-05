@@ -174,37 +174,69 @@
       "id": "1046",
       "path": "linux/kernel-y16/patches/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
       "sha256": "bed783ff07e4ad1a7ebaa0a2d9b566aa67e52e01611db1996c51d384067b0f55",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending",
+      "device": "not-tested",
+      "local_patch": "gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
+      "author": "Akhil P Oommen",
+      "license": "GPL-2.0-only",
+      "risk": "medium",
+      "validated": "2026-11-05",
+      "dependencies": [
+        "upstream-device-series"
+      ]
     },
     {
       "id": "1047",
       "path": "linux/kernel-y16/patches/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
       "sha256": "bc1181717ef829d440562e81c8e817fa591ef656597d0836c0b9404444689b67",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending",
+      "device": "not-tested",
+      "local_patch": "gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
+      "author": "Akhil P Oommen",
+      "license": "GPL-2.0-only",
+      "risk": "medium",
+      "validated": "2026-11-05",
+      "dependencies": [
+        "upstream-device-series"
+      ]
     },
     {
       "id": "1048",
       "path": "linux/kernel-y16/patches/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",
       "sha256": "7c6962aa5a969d9c3e42993330141076d06eb172528528e893775bc1a661eeb9",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending",
+      "device": "not-tested",
+      "local_patch": "gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",
+      "author": "Akhil P Oommen",
+      "license": "GPL-2.0-only",
+      "risk": "medium",
+      "validated": "2026-11-05",
+      "dependencies": [
+        "upstream-device-series"
+      ]
     },
     {
       "id": "1052",
       "path": "linux/kernel-y16/patches/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch",
       "sha256": "6ef812c7ccd616caae2f50dc305537a41a225834c3e3fa2a584f8b8dfd6f2fd4",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending",
+      "device": "not-tested",
+      "local_patch": "video/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch",
+      "author": "Xilin Wu",
+      "license": "GPL-2.0-only",
+      "risk": "medium-high",
+      "validated": "2026-11-05",
+      "dependencies": [
+        "upstream-device-series"
+      ]
     },
     {
       "id": "1053",

@@ -11,6 +11,9 @@ bash custom-build/ci/install-deps.sh
 bash custom-build/scripts/build-kernel.sh baseline
 # Only after the baseline succeeds and config review is complete:
 bash custom-build/scripts/build-kernel.sh integration
+# Separate fresh directory per selection; all four are enabled by default.
+BUILD_WORK=/absolute/path/gpu-only PATCH_IDS=1046,1047,1048 bash custom-build/scripts/build-kernel.sh integration
+BUILD_WORK=/absolute/path/video-only PATCH_IDS=1052 bash custom-build/scripts/build-kernel.sh integration
 ```
 
 Use a fresh work directory for every attempt. Set `BUILD_WORK` to an absolute
@@ -34,7 +37,9 @@ commit. They are local-install/testing artifacts, not releases in the helper's
 included. Packaging an Android boot image later requires the user's own stock
 image and upstream tooling; this job performs no partition writes.
 
-The first CI builds only the baseline. No release is published automatically.
+CI builds the baseline, then builds the testing integration only if baseline
+succeeds. The first batch enables GPU 1046/1047/1048 and Iris 1052; 1041,
+1053, 1057 and fsck remain disabled. No release is published automatically.
 The workflow is triggered by relevant pushes to integration/gnome. A manual
 workflow_dispatch entry exists, but GitHub's manual workflow discovery requires
 the workflow to be present on the default branch; keep main pristine and use

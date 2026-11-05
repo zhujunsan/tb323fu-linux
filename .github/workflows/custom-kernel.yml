@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-name: Custom kernel baseline
+name: Custom kernel baseline and integration
 on:
   push:
     branches: [integration/gnome]
@@ -43,5 +43,29 @@ jobs:
             out/build-baseline/artifacts/
             out/build-baseline/build.log
             out/build-baseline/kout/.config
+          include-hidden-files: true
+          retention-days: 14
+  integration:
+    needs: baseline
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install native ARM64 build dependencies
+        run: bash custom-build/ci/install-deps.sh
+      - name: Build reviewed GPU and Iris fixes with Ubuntu security config
+        env:
+          BUILD_JOBS: '2'
+        run: bash custom-build/scripts/build-kernel.sh integration
+      - name: Preserve integration artifacts and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/build-integration/artifacts/
+            out/build-integration/build.log
+            out/build-integration/selected-patches.txt
+            out/build-integration/kout/.config
           include-hidden-files: true
           retention-days: 14

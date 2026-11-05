@@ -62,7 +62,25 @@ def main():
             results.append({'id': ident, 'forward_applies': forward.returncode == 0,
                             'reverse_applies': reverse.returncode == 0,
                             'forward_diagnostics': forward.stderr})
+        # Check every imported patch independently on pristine project files,
+        # then the default combination in series order. patch-plan validates
+        # local files against their original downstream checksums.
+        import os
+        env = dict(os.environ)
+        env.pop('PATCH_IDS', None)
+        plan = subprocess.run(['python3', str(REPO / 'custom-build/scripts/patch-plan.py')],
+                              check=True, text=True, capture_output=True, env=env)
+        selected = plan.stdout.splitlines()
+        for patch in selected:
+            check = run('git', 'apply', '--check', patch, cwd=tree)
+            if check.returncode:
+                raise SystemExit(check.stderr)
+        for patch in selected:
+            applied = run('git', 'apply', patch, cwd=tree)
+            if applied.returncode:
+                raise SystemExit(applied.stderr)
         print(json.dumps({'scope': 'independent checks on P0-touched files only',
+                          'integrated_series_applies': [str(Path(p).relative_to(REPO)) for p in selected],
                           'results': results}, indent=2))
         if not all(r['forward_applies'] and not r['reverse_applies'] for r in results):
             raise SystemExit('Candidate applicability changed: review required')

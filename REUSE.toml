@@ -5,6 +5,20 @@
 # for the component map.
 version = 1
 
+# Custom integration manifests and imported kernel derivatives. Original
+# patch author/signoff headers are retained; see docs/PATCH-STATUS.md.
+[[annotations]]
+path = "custom/manifests/*.json"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 contributors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "custom/patches/**/*.patch"
+precedence = "override"
+SPDX-FileCopyrightText = ["2026 Akhil P Oommen", "2026 Xilin Wu"]
+SPDX-License-Identifier = "GPL-2.0-only"
+
 # Copyright of the project-written files (NOTICE: held by Joonhoe Kim unless a file
 # names other holders), added to whatever the file says. Imported code is
 # overridden further down.

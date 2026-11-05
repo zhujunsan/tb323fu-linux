@@ -1,3 +1,6 @@
 # SPDX-License-Identifier: MIT
-# Additional patches in application order, relative to this directory.
-# Empty until the upstream baseline build and candidate review are complete.
+# Testing integration only; disable/select individual IDs with PATCH_IDS.
+gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch
+gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch
+gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch
+video/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch

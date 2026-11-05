@@ -35,10 +35,12 @@ git -C "$src" checkout --detach FETCH_HEAD
 test "$(git -C "$src" rev-parse HEAD)" = "$base"
 git -C "$src" -c user.name='TB323FU Build' -c user.email=build@localhost am "$repo"/kernel/patches/*.patch
 if [ "$profile" = integration ]; then
+  python3 "$repo/custom-build/scripts/patch-plan.py" > "$work/selected-patches.txt"
   while IFS= read -r patch; do
-    case "$patch" in ''|'#'*) continue ;; esac
-    git -C "$src" -c user.name='TB323FU Build' -c user.email=build@localhost am "$repo/custom/patches/$patch"
-  done < "$repo/custom/patches/series"
+    git -C "$src" -c user.name='TB323FU Build' -c user.email=build@localhost am "$patch"
+  done < "$work/selected-patches.txt"
+else
+  : > "$work/selected-patches.txt"
 fi
 cd "$src"
 make_args=(ARCH=arm64 LLVM=-18 O="$kout" LOCALVERSION=)
@@ -89,6 +91,7 @@ cp "$kout/arch/arm64/boot/Image" "$dtb" "$work/initramfs.cpio.gz" "$assets/"
 gzip -9 -n -c "$assets/Image" > "$assets/Image.gz"
 cp "$kout/.config" "$assets/config"
 cp "$repo/custom/manifests/sources.json" "$assets/sources.json"
+sed "s|$repo/||" "$work/selected-patches.txt" > "$assets/selected-patches.txt"
 git -C "$repo" rev-parse HEAD > "$assets/project-commit.txt"
 git rev-parse HEAD > "$assets/patched-linux-commit.txt"
 dpkg-query -W > "$assets/build-packages.txt"
