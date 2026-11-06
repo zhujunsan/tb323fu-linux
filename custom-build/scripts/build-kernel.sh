@@ -44,6 +44,18 @@ else
 fi
 cd "$src"
 make_args=(ARCH=arm64 LLVM=-18 O="$kout" LOCALVERSION=)
+if [ "${USE_CCACHE:-0}" = 1 ]; then
+  command -v ccache >/dev/null
+  export CCACHE_DIR=${CCACHE_DIR:-$repo/out/ccache-$profile}
+  export CCACHE_BASEDIR=$work CCACHE_COMPILERCHECK=content
+  ccache --max-size 2G
+  ccache --zero-stats
+  make_args+=(CC='ccache clang-18')
+  trap 'ccache --show-stats' EXIT
+fi
+jobs=${BUILD_JOBS:-$(nproc)}
+case "$jobs" in ''|*[!0-9]*|0) echo 'BUILD_JOBS must be a positive integer' >&2; exit 2 ;; esac
+echo "Build profile=$profile jobs=$jobs ccache=${USE_CCACHE:-0}"
 make "${make_args[@]}" defconfig
 fragments=(arch/arm64/configs/kaanapali-oneplus-infiniti_defconfig)
 for f in baldur baldur-display baldur-netfilter baldur-extra; do fragments+=("$repo/kernel/config/$f.fragment"); done
@@ -57,7 +69,7 @@ if [ "$profile" = integration ]; then
   grep -qx 'CONFIG_SECURITY_APPARMOR=y' "$kout/.config"
   grep '^CONFIG_LSM=' "$kout/.config" | grep -q apparmor
 fi
-make "${make_args[@]}" -j"${BUILD_JOBS:-2}" Image dtbs modules headers_install
+make "${make_args[@]}" -j"$jobs" Image qcom/kaanapali-lenovo-baldur-display.dtb modules headers_install
 make "${make_args[@]}" INSTALL_MOD_PATH="$mods" INSTALL_MOD_STRIP=1 modules_install
 # Separate build/install targets avoid a parallel build/install race.
 oot=$work/aw882xx
@@ -75,7 +87,7 @@ bash "$repo/custom-build/scripts/build-initramfs.sh" -k "$kout" -b /bin/busybox 
   -l "$work/initramfs.list" "$work/initramfs.cpio.gz"
 scripts/config --file "$kout/.config" --set-str INITRAMFS_SOURCE "$work/initramfs.cpio.gz"
 make "${make_args[@]}" olddefconfig
-make "${make_args[@]}" -j"${BUILD_JOBS:-2}" Image
+make "${make_args[@]}" -j"$jobs" Image
 dtb=$kout/arch/arm64/boot/dts/qcom/kaanapali-lenovo-baldur-display.dtb
 python3 - "$kout/arch/arm64/boot/Image" "$dtb" "$work/initramfs.cpio.gz" "$rel" <<'PY'
 from pathlib import Path
@@ -97,5 +109,8 @@ git rev-parse HEAD > "$assets/patched-linux-commit.txt"
 dpkg-query -W > "$assets/build-packages.txt"
 printf '%s\n' "$rel" > "$assets/kernelrelease.txt"
 tar -C "$repo" -czf "$assets/patches-and-module-sources.tar.gz" kernel/patches kernel/config kernel/out-of-tree/aw882xx custom
+if [ "${USE_CCACHE:-0}" = 1 ]; then
+  ccache --show-stats > "$assets/ccache-stats.txt"
+fi
 (cd "$assets" && sha256sum -- * > SHA256SUMS)
 echo 'BUILD COMPLETE: static checks passed; no device boot test; no vendor firmware included.'

@@ -7,9 +7,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: custom-kernel-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   audit:
     runs-on: ubuntu-24.04
@@ -17,6 +18,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Audit locked P0 candidates
         run: python3 custom-build/scripts/audit-p0.py
+      - name: Test artifact storage guard
+        run: python3 -m unittest discover -s custom-build/tests -p 'test_*.py'
       - name: Test helper workspace against the locked dependencies
         run: cargo test --locked --manifest-path helper/Cargo.toml --workspace
       - name: Install packaging regression dependencies
@@ -25,55 +28,67 @@ jobs:
           sudo apt-get install -y --no-install-recommends build-essential cpio squashfs-tools busybox-static console-setup-linux wireless-regdb
       - name: Reproduce timestamp conflict and verify real initramfs packaging
         run: bash custom-build/tests/test-initramfs-packaging.sh
-  baseline:
+  kernel:
+    name: ${{ matrix.profile }}
     needs: audit
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 360
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        profile: [baseline, integration]
     steps:
       - uses: actions/checkout@v7
-      - name: Record runner capacity
+      - name: Record runner capacity and require free public-repository compute
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          test "$(gh api "repos/$GITHUB_REPOSITORY" --jq .private)" = false
           uname -a
           free -h
           df -h
+      - name: Check free cache storage limit
+        id: cache-policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          enabled=false
+          if limit=$(gh api "repos/$GITHUB_REPOSITORY/actions/cache/storage-limit" --jq .max_cache_size_gb); then
+            if [ "$limit" -le 10 ]; then enabled=true; fi
+          fi
+          echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
+          echo "Remote cache enabled: $enabled (only with repository limit <= 10 GB)"
+      - name: Restore compiler cache
+        if: steps.cache-policy.outputs.enabled == 'true'
+        uses: actions/cache@v4
+        with:
+          path: out/ccache-${{ matrix.profile }}
+          key: ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-${{ matrix.profile }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-${{ matrix.profile }}-
       - name: Install native ARM64 build dependencies
         run: bash custom-build/ci/install-deps.sh
-      - name: Build unchanged upstream kernel with unique CI identity
+      - name: Build kernel and verify artifacts
         env:
-          BUILD_JOBS: '2'
-        run: bash custom-build/scripts/build-kernel.sh baseline
-      - name: Preserve artifacts and diagnostics
+          BUILD_JOBS: '4'
+          USE_CCACHE: '1'
+          PROFILE: ${{ matrix.profile }}
+        run: bash custom-build/scripts/build-kernel.sh "$PROFILE"
+      - name: Prepare artifacts within repository storage budget
+        id: package
         if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROFILE: ${{ matrix.profile }}
+          BUILD_RESULT: ${{ job.status }}
+        run: python3 custom-build/ci/prepare-upload.py "$PROFILE" "$BUILD_RESULT"
+      - name: Upload bounded artifacts and diagnostics
+        if: always() && steps.package.outputs.upload == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: upstream-baseline-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            out/build-baseline/artifacts/
-            out/build-baseline/build.log
-            out/build-baseline/kout/.config
+          name: ${{ matrix.profile }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/upload-${{ matrix.profile }}/
           include-hidden-files: true
-          retention-days: 14
-  integration:
-    needs: baseline
-    runs-on: ubuntu-24.04-arm
-    timeout-minutes: 360
-    steps:
-      - uses: actions/checkout@v7
-      - name: Install native ARM64 build dependencies
-        run: bash custom-build/ci/install-deps.sh
-      - name: Build Wi-Fi power saving, GPU and Iris fixes with Ubuntu security config
-        env:
-          BUILD_JOBS: '2'
-        run: bash custom-build/scripts/build-kernel.sh integration
-      - name: Preserve integration artifacts and diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            out/build-integration/artifacts/
-            out/build-integration/build.log
-            out/build-integration/selected-patches.txt
-            out/build-integration/kout/.config
-          include-hidden-files: true
-          retention-days: 14
+          compression-level: 0
+          retention-days: 3
