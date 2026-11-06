@@ -12,8 +12,9 @@ Never merge the downstream repository wholesale or rewrite existing history.
 - `custom/config/`: integration fragments, starting with Ubuntu security.
 - `custom-build/scripts/`: scoped source audit and native ARM64 build driver.
 - `custom-build/ci/`: build-host provisioning.
-- `.github/workflows/custom-kernel.yml`: audit, original baseline build, then
-  testing integration build gated on baseline success.
+- `.github/workflows/custom-kernel.yml`: fast audit/packaging checks, then
+  baseline and testing integration builds in parallel on free standard ARM64
+  runners. Both must succeed; the initial serial baseline has already passed.
 
 The pipeline preserves the upstream built-in DTB, command line, shared modules,
 initramfs and helper contracts. Trial/Keep/Rollback remain upstream mechanisms.
