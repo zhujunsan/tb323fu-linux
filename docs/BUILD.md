@@ -17,12 +17,12 @@ zero. Kernel compilation retains the source-derived timestamp.
 
 ```sh
 bash custom-build/ci/install-deps.sh
+bash custom-build/scripts/build-kernel.sh san-flavored
+# Optional: investigate our toolchain against the original upstream tree.
 bash custom-build/scripts/build-kernel.sh baseline
-# Only after the baseline succeeds and config review is complete:
-bash custom-build/scripts/build-kernel.sh integration
 # Separate fresh directory per selection; all five are enabled by default.
-BUILD_WORK=/absolute/path/gpu-only PATCH_IDS=1046,1047,1048 bash custom-build/scripts/build-kernel.sh integration
-BUILD_WORK=/absolute/path/video-only PATCH_IDS=1052 bash custom-build/scripts/build-kernel.sh integration
+BUILD_WORK=/absolute/path/gpu-only PATCH_IDS=1046,1047,1048 bash custom-build/scripts/build-kernel.sh san-flavored
+BUILD_WORK=/absolute/path/video-only PATCH_IDS=1052 bash custom-build/scripts/build-kernel.sh san-flavored
 ```
 
 Use a fresh work directory for every attempt. Set `BUILD_WORK` to an absolute
@@ -47,25 +47,30 @@ commit. They are local-install/testing artifacts, not releases in the helper's
 included. Packaging an Android boot image later requires the user's own stock
 image and upstream tooling; this job performs no partition writes.
 
-After the first successful baseline and integration builds, routine CI now builds
-both profiles in parallel after the fast checks. The workflow requires both to
-succeed; parallel execution does not promote a failing baseline. The default
-batch enables Wi-Fi 1041, GPU 1046/1047/1048 and Iris 1052;
+Routine CI builds only san-flavored after the fast checks. The original upstream
+baseline already passed our initial toolchain validation; upstream releases can
+also be used as control artifacts after recording their source/config versions.
+Do not assume the latest release represents current upstream main. Rebuilding
+baseline is opt-in (`build_baseline=true` for workflow_dispatch, where available,
+or the local build script) for toolchain changes or regression investigations.
+If explicitly selected, both profiles run in parallel and must succeed.
+The default batch enables Wi-Fi 1041, GPU 1046/1047/1048 and Iris 1052;
 1053, 1057 and fsck remain disabled. Wi-Fi is included per the owner's preference
 for power savings; actual power/throughput impact is unmeasured. Set
 `PATCH_IDS=1046,1047,1048,1052` for a no-Wi-Fi-patch comparison build in a fresh
 work directory. No release is published automatically.
-The workflow is triggered by relevant pushes to integration/gnome. A manual
+The workflow is triggered by relevant pushes to san-flavored. A manual
 workflow_dispatch entry exists, but GitHub's manual workflow discovery requires
 the workflow to be present on the default branch; keep main pristine and use
 branch push triggers initially.
 
 ## Free-runner performance and storage policy
 
-The first green run took 48m35s for baseline and 51m03s for integration, serially.
+The first green run took 48m35s for baseline and 51m03s for integration (the
+former name of san-flavored), serially.
 Both used only two compilation jobs and no compiler cache. Routine builds now
 use the standard public-repository `ubuntu-24.04-arm` runner, four compiler jobs
-and two independent profile jobs in parallel. Only the board's display DTB is
+and only the san-flavored profile by default. Only the board's display DTB is
 built, not DTBs for unrelated machines. No kernel config/features are trimmed.
 Cold-build speedup must be measured in the new run; no fixed duration is promised.
 
@@ -79,7 +84,7 @@ Remote caching is used only if the repository cache cap is at most 10 GiB. It is
 never increased by the workflow; older snapshots are evicted by GitHub at the cap.
 
 Build outputs remain complete in each job, but baseline uploads diagnostics only;
-integration uploads its complete outputs in `kernel-artifacts.tar.gz` (which
+san-flavored uploads its complete outputs in `kernel-artifacts.tar.gz` (which
 contains `SHA256SUMS`). Retention is three days, and the already-compressed bundle
 is not compressed again by upload-artifact. A 100 MiB bundle cap and 400 MiB
 repository artifact soft budget prevent unbounded accumulation. If the cap is

@@ -3,8 +3,8 @@
 # Baseline first. Native ARM64 Linux; no flashing or release publication.
 set -euo pipefail
 repo=$(cd "$(dirname "$0")/../.." && pwd)
-profile=${1:-baseline}
-case "$profile" in baseline|integration) ;; *) echo 'profile: baseline|integration' >&2; exit 2 ;; esac
+profile=${1:-san-flavored}
+case "$profile" in baseline|san-flavored) ;; *) echo 'profile: baseline|san-flavored' >&2; exit 2 ;; esac
 test "$(uname -s)/$(uname -m)" = Linux/aarch64
 work=${BUILD_WORK:-$repo/out/build-$profile}
 mkdir -p "$work"
@@ -34,7 +34,7 @@ git -C "$src" fetch --depth=1 https://github.com/torvalds/linux.git "$base"
 git -C "$src" checkout --detach FETCH_HEAD
 test "$(git -C "$src" rev-parse HEAD)" = "$base"
 git -C "$src" -c user.name='TB323FU Build' -c user.email=build@localhost am "$repo"/kernel/patches/*.patch
-if [ "$profile" = integration ]; then
+if [ "$profile" = san-flavored ]; then
   python3 "$repo/custom-build/scripts/patch-plan.py" > "$work/selected-patches.txt"
   while IFS= read -r patch; do
     git -C "$src" -c user.name='TB323FU Build' -c user.email=build@localhost am "$patch"
@@ -59,13 +59,13 @@ echo "Build profile=$profile jobs=$jobs ccache=${USE_CCACHE:-0}"
 make "${make_args[@]}" defconfig
 fragments=(arch/arm64/configs/kaanapali-oneplus-infiniti_defconfig)
 for f in baldur baldur-display baldur-netfilter baldur-extra; do fragments+=("$repo/kernel/config/$f.fragment"); done
-[ "$profile" != integration ] || fragments+=("$repo/custom/config/ubuntu-security.fragment")
+[ "$profile" != san-flavored ] || fragments+=("$repo/custom/config/ubuntu-security.fragment")
 scripts/kconfig/merge_config.sh -m -O "$kout" "$kout/.config" "${fragments[@]}"
 # CI/local artifacts use unique names, deliberately outside the release tNN channel.
 ident=${GITHUB_RUN_ID:-$SOURCE_DATE_EPOCH}-${GITHUB_RUN_ATTEMPT:-1}-$(git -C "$repo" rev-parse --short=12 HEAD)
 scripts/config --file "$kout/.config" --set-str LOCALVERSION "-tb323fu-ci-$profile-$ident" --disable LOCALVERSION_AUTO --set-str INITRAMFS_SOURCE ''
 make "${make_args[@]}" olddefconfig
-if [ "$profile" = integration ]; then
+if [ "$profile" = san-flavored ]; then
   grep -qx 'CONFIG_SECURITY_APPARMOR=y' "$kout/.config"
   grep '^CONFIG_LSM=' "$kout/.config" | grep -q apparmor
 fi

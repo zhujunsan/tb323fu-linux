@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 """Keep this repository's CI artifacts bounded without deleting prior builds.
 
-Only integration ships a full archive. Baseline keeps diagnostics. If storage
+Only san-flavored ships a full archive. Baseline keeps diagnostics. If storage
 cannot be checked or the soft budget is exhausted, build logs remain on Actions.
 This repository cap is not an account-wide billing/budget setting.
 """
@@ -22,7 +22,7 @@ RESERVE = 2 * 1024**2  # Other profile's small diagnostic upload.
 
 def main():
     profile, result = sys.argv[1:]
-    if profile not in {'baseline', 'integration'}:
+    if profile not in {'baseline', 'san-flavored'}:
         raise SystemExit('Unknown profile')
     work = REPO / 'out' / f'build-{profile}'
     output = REPO / 'out' / f'upload-{profile}'
@@ -42,7 +42,7 @@ def main():
             path = work / source
             if path.is_file():
                 shutil.copyfile(path, output / ('config' if path.name == '.config' else path.name))
-        if profile == 'integration' and result == 'success':
+        if profile == 'san-flavored' and result == 'success':
             archive = output / 'kernel-artifacts.tar.gz'
             with tarfile.open(archive, 'w:gz') as tar:
                 for path in sorted((work / 'artifacts').iterdir()):

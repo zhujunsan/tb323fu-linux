@@ -7,7 +7,7 @@ Upstream project: `e236668a086a28889c4431a4545951aa316c00e1`; Linux:
 
 1046, 1047, 1048 and 1052 are imported byte-for-byte; 1041 is imported with
 only its personal module-version marker removed. All five are enabled in the
-**testing integration** profile. The previous project revision `10fa3f3` passed
+**san-flavored testing** profile. The previous project revision `10fa3f3` passed
 both complete baseline and five-patch integration builds in
 [CI 42150201235](https://github.com/zhujunsan/tb323fu-linux/actions/runs/42150201235).
 The current upstream refresh needs a new complete build. No candidate has been
@@ -63,7 +63,7 @@ code changes are small enough for direct review against it.
 Run the audit to check the four patches independently and then in series order.
 Use `PATCH_IDS=1046,1047,1048` to build GPU only, `PATCH_IDS=1052` for video only,
 or an individual ID. Empty `PATCH_IDS` disables every extra patch but retains
-the integration security config. Unknown IDs and checksum drift fail closed.
+the san-flavored security config. Unknown IDs and checksum drift fail closed.
 Selection always follows canonical order; callers cannot reorder the series.
 
 ## Wi-Fi power-saving inclusion
@@ -107,6 +107,6 @@ unrelated differences. Port only the reviewed root-check behavior.
 
 `kernel/config/baldur-extra.fragment` builds AppArmor but explicitly documents
 it as inactive in `CONFIG_LSM`. Baseline builds preserve that configuration as
-a comparison. The integration profile adds `custom/config/ubuntu-security.fragment`
+a comparison. The san-flavored profile adds `custom/config/ubuntu-security.fragment`
 and checks the resolved config for AppArmor and its LSM entry. Policy loading,
 Snap compatibility and confinement still require Ubuntu/device validation.

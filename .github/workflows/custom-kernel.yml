@@ -1,10 +1,15 @@
 # SPDX-License-Identifier: MIT
-name: Custom kernel baseline and integration
+name: san-flavored kernel
 on:
   push:
-    branches: [integration/gnome]
+    branches: [san-flavored]
     paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
   workflow_dispatch:
+    inputs:
+      build_baseline:
+        description: Also rebuild the original upstream baseline for an explicit investigation
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -37,7 +42,7 @@ jobs:
       fail-fast: false
       max-parallel: 2
       matrix:
-        profile: [baseline, integration]
+        profile: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.build_baseline && '["san-flavored","baseline"]' || '["san-flavored"]') }}
     steps:
       - uses: actions/checkout@v7
       - name: Record runner capacity and require free public-repository compute

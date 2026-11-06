@@ -1,6 +1,6 @@
 # tb323fu-linux
 
-> **Custom Ubuntu integration (`integration/gnome`):** this branch targets China-market
+> **san-flavored Ubuntu (`san-flavored`):** this branch targets China-market
 > TB323FU with Android + Ubuntu 26.04, GNOME 50 and Wayland. Device validation is
 > pending. `main` stays aligned with upstream; downstream enhancements are audited
 > individually. Start with [build instructions](docs/BUILD.md),
@@ -11,7 +11,7 @@
 > Quick source audit: `python3 custom-build/scripts/audit-p0.py`.
 > Native ARM64 Linux build: `bash custom-build/ci/install-deps.sh`, then
 > `bash custom-build/scripts/build-kernel.sh baseline`.
-> The branch's **Custom kernel baseline** Action runs the same scripts on relevant
+> The branch's **san-flavored kernel** Action runs the same scripts on relevant
 > pushes and uploads test artifacts. It does not publish stable releases.
 
 Mainline Linux on the **Lenovo Legion Tab Gen 5 / Legion Y700 5th Gen** (model **TB323FU**, Snapdragon 8 Elite Gen 5, SM8850 "kaanapali", board "baldur").

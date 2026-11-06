@@ -7,7 +7,7 @@
 - Previous verified integration: `10fa3f366f1be21aa6748f4616249496c1b20754`.
 - Previous complete CI: [42150201235](https://github.com/zhujunsan/tb323fu-linux/actions/runs/42150201235),
   audit, baseline and five-patch integration all succeeded; both artifacts exist.
-- Delivery: directly into `integration/gnome` after synchronizing `main`.
+- Delivery: directly into `san-flavored` after synchronizing `main`.
   An initial candidate branch/PR was unnecessary and is retired per owner instruction.
 
 ## Upstream changes reviewed
@@ -61,7 +61,10 @@ Full ARM64 build results must be read from integration CI, not inferred from
 the previous green run. No device validation or stable release is claimed.
 
 `main` mirrors the new upstream revision without custom commits.
-`integration/gnome` now contains that main revision, its five custom patches and
+`san-flavored` now contains that main revision, its five custom patches and
 the refreshed source lock. The owner confirmed direct main-to-integration
 synchronization; no additional branch or PR approval is required for routine
 updates. The initial merge commits are retained without rewriting history.
+
+The custom branch and build profile were subsequently renamed to `san-flavored`
+on 2026-11-06. Historical CI job names and source revisions are unchanged.

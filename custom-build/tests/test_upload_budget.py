@@ -41,8 +41,8 @@ class UploadBudgetTests(unittest.TestCase):
                     self.assertEqual(archive.extractfile('Image').read(), b'kernel fixture')
             return output, files
 
-    def test_integration_archive_contains_build_outputs(self):
-        output, files = self.execute('integration')
+    def test_san_flavored_archive_contains_build_outputs(self):
+        output, files = self.execute('san-flavored')
         self.assertIn('upload=true', output)
         self.assertIn('kernel-artifacts.tar.gz', files)
 
@@ -52,16 +52,16 @@ class UploadBudgetTests(unittest.TestCase):
         self.assertEqual(files, {'build.log'})
 
     def test_full_budget_blocks_upload(self):
-        output, files = self.execute('integration', used=upload.BUDGET)
+        output, files = self.execute('san-flavored', used=upload.BUDGET)
         self.assertIn('upload=false', output)
         self.assertNotIn('kernel-artifacts.tar.gz', files)
 
     def test_unknown_usage_blocks_upload(self):
-        output, _ = self.execute('integration', api_error=True)
+        output, _ = self.execute('san-flavored', api_error=True)
         self.assertIn('upload=false', output)
 
     def test_oversized_archive_keeps_diagnostics(self):
-        output, files = self.execute('integration', archive_limit=1)
+        output, files = self.execute('san-flavored', archive_limit=1)
         self.assertIn('upload=true', output)
         self.assertEqual(files, {'build.log'})
 

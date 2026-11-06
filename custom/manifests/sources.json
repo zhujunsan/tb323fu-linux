@@ -280,5 +280,13 @@
     "integration": "success",
     "device": "not-tested",
     "date": "2026-11-06"
+  },
+  "baseline_reference": {
+    "repository": "joonhoekim/tb323fu-linux",
+    "release": "kernel-t59",
+    "source_commit": "6dc884fab839895789cf29e7425a8693253462ab",
+    "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t59",
+    "usage": "Upstream Image/modules/config reference; routine CI builds only san-flavored",
+    "kernel_inputs_match_current_upstream": true
   }
 }
