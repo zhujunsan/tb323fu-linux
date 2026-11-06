@@ -2,7 +2,7 @@
 name: Custom kernel baseline and integration
 on:
   push:
-    branches: [integration/gnome]
+    branches: [integration/gnome, 'codex/upstream-sync-*']
     paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
   workflow_dispatch:
 permissions:
@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Audit locked P0 candidates
         run: python3 custom-build/scripts/audit-p0.py
+      - name: Test helper workspace against the locked dependencies
+        run: cargo test --locked --manifest-path helper/Cargo.toml --workspace
       - name: Install packaging regression dependencies
         run: |
           sudo apt-get update

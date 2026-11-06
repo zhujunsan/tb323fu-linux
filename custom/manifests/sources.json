@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "joonhoekim/tb323fu-linux",
-    "commit": "2ba0908546b482792d3bf03a102799060b90553e"
+    "commit": "e236668a086a28889c4431a4545951aa316c00e1"
   },
   "linux": {
     "repository": "https://github.com/torvalds/linux.git",
@@ -158,7 +158,8 @@
     "0150-drm-msm-dp-Track-the-PHY-power-and-link-clock-state.patch": "03f6d92dd65c8f0fe50c8d9185838501d8f792ce669d6a34a3bd034966ebe6c2",
     "0151-drm-msm-dp-Release-the-PHY-init-when-the-link-is-not.patch": "3c06f42319c69716876de7b894b545beb53558d89d30497e754b73380554cbe9",
     "0152-mmc-sd-Keep-the-card-when-its-extension-registers-fa.patch": "5fc19deafa742e073d8e29da79abc253ba9d500d9452e283444c334f8170a912",
-    "0153-input-nt36536-report-the-pen-tilt-in-the-screen-s-ax.patch": "82e75995b4cb964c9456a31f21b8d4158b14552fc23381a7fbce12d65a64fde2"
+    "0153-input-nt36536-report-the-pen-tilt-in-the-screen-s-ax.patch": "82e75995b4cb964c9456a31f21b8d4158b14552fc23381a7fbce12d65a64fde2",
+    "0154-leds-rgb-aw22127-Add-color-effects-and-zones-set-the.patch": "fd6c7b935aff0cbc5c0f15bc7336c454f95a47ff48a97092571e2e11562a1496"
   },
   "candidates": [
     {
@@ -167,14 +168,14 @@
       "sha256": "0594e1a4392292e7429ebbb1b872d0fcec546cd55a213e8f82134cdd2f345390",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending",
+      "build": "pending-upstream-refresh",
       "device": "not-tested",
       "local_patch": "wifi/1041-ath12k-sta-ps-vif-cfg.patch",
       "local_sha256": "3057d092c1850f2cd18cccd5c24554bd383f815c9d9e4f57ec46a4f4ee069cf5",
       "author": "y700 workspace",
       "license": "GPL-2.0-only",
       "risk": "high",
-      "validated": "2026-11-05",
+      "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
       ],
@@ -189,13 +190,13 @@
       "sha256": "bed783ff07e4ad1a7ebaa0a2d9b566aa67e52e01611db1996c51d384067b0f55",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending",
+      "build": "pending-upstream-refresh",
       "device": "not-tested",
       "local_patch": "gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
       "author": "Akhil P Oommen",
       "license": "GPL-2.0-only",
       "risk": "medium",
-      "validated": "2026-11-05",
+      "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
       ]
@@ -206,13 +207,13 @@
       "sha256": "bc1181717ef829d440562e81c8e817fa591ef656597d0836c0b9404444689b67",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending",
+      "build": "pending-upstream-refresh",
       "device": "not-tested",
       "local_patch": "gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
       "author": "Akhil P Oommen",
       "license": "GPL-2.0-only",
       "risk": "medium",
-      "validated": "2026-11-05",
+      "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
       ]
@@ -223,13 +224,13 @@
       "sha256": "7c6962aa5a969d9c3e42993330141076d06eb172528528e893775bc1a661eeb9",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending",
+      "build": "pending-upstream-refresh",
       "device": "not-tested",
       "local_patch": "gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",
       "author": "Akhil P Oommen",
       "license": "GPL-2.0-only",
       "risk": "medium",
-      "validated": "2026-11-05",
+      "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
       ]
@@ -240,13 +241,13 @@
       "sha256": "6ef812c7ccd616caae2f50dc305537a41a225834c3e3fa2a584f8b8dfd6f2fd4",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending",
+      "build": "pending-upstream-refresh",
       "device": "not-tested",
       "local_patch": "video/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch",
       "author": "Xilin Wu",
       "license": "GPL-2.0-only",
       "risk": "medium-high",
-      "validated": "2026-11-05",
+      "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
       ]
@@ -270,5 +271,14 @@
       "device": "not-tested"
     }
   ],
-  "audited": "2026-11-05"
+  "audited": "2026-11-06",
+  "previous_verified_build": {
+    "project_commit": "10fa3f366f1be21aa6748f4616249496c1b20754",
+    "upstream_commit": "2ba0908546b482792d3bf03a102799060b90553e",
+    "ci_url": "https://github.com/zhujunsan/tb323fu-linux/actions/runs/42150201235",
+    "baseline": "success",
+    "integration": "success",
+    "device": "not-tested",
+    "date": "2026-11-06"
+  }
 }

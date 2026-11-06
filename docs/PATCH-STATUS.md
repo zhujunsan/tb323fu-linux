@@ -1,15 +1,21 @@
 # Custom Ubuntu: P0 patch audit
 
-Audit date: 2026-11-05. Source lock: [`sources.json`](../custom/manifests/sources.json).
-Upstream project: `2ba0908546b482792d3bf03a102799060b90553e`; Linux:
+Audit date: 2026-11-06. Source lock: [`sources.json`](../custom/manifests/sources.json).
+Upstream project: `e236668a086a28889c4431a4545951aa316c00e1`; Linux:
 `v7.3`, `c03c1a14507dfaf8b856c2608f9ac216021fc222`. Downstream reference:
 `4240ea715133574fd335f2e1631a450f09c8c16e` (y16 patches; y17 initramfs).
 
 1046, 1047, 1048 and 1052 are imported byte-for-byte; 1041 is imported with
 only its personal module-version marker removed. All five are enabled in the
-**testing integration** profile. No candidate has completed a build or been
+**testing integration** profile. The previous project revision `10fa3f3` passed
+both complete baseline and five-patch integration builds in
+[CI 42150201235](https://github.com/zhujunsan/tb323fu-linux/actions/runs/42150201235).
+The current upstream refresh needs a new complete build. No candidate has been
 tested on our device. The upstream baseline profile includes none of them.
 No deep power experiments or downstream complete configuration are imported.
+This refresh adds upstream LED patch 0154; all 146 previous upstream patch
+files, Linux base, configuration and initramfs are unchanged. See the
+[synchronization report](UPSTREAM-SYNC-2026-11-06.md).
 
 ## Method and limits
 
