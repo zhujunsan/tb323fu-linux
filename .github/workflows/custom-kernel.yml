@@ -2,7 +2,7 @@
 name: Custom kernel baseline and integration
 on:
   push:
-    branches: [integration/gnome, 'codex/upstream-sync-*']
+    branches: [integration/gnome]
     paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
   workflow_dispatch:
 permissions:

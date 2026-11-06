@@ -1,4 +1,4 @@
-# Upstream synchronization candidate: 2026-11-06
+# Upstream synchronization: 2026-11-06
 
 ## Source revisions
 
@@ -7,7 +7,8 @@
 - Previous verified integration: `10fa3f366f1be21aa6748f4616249496c1b20754`.
 - Previous complete CI: [42150201235](https://github.com/zhujunsan/tb323fu-linux/actions/runs/42150201235),
   audit, baseline and five-patch integration all succeeded; both artifacts exist.
-- Candidate branch: `codex/upstream-sync-20261106`.
+- Delivery: directly into `integration/gnome` after synchronizing `main`.
+  An initial candidate branch/PR was unnecessary and is retired per owner instruction.
 
 ## Upstream changes reviewed
 
@@ -53,12 +54,14 @@ at the exact Linux base, and helper-core tests (58 passed, 2 ignored). The index
 check avoids macOS case-insensitive checkout collisions; it is not compilation.
 The P0 check used Git objects for the exact Linux base and cached downstream
 patches validated by the original SHA-256 checks after local raw-download TLS
-failures. Candidate CI will also repeat online source retrieval.
-Candidate CI additionally tests the complete Linux helper workspace, real
+failures. Integration CI will also repeat online source retrieval.
+Integration CI additionally tests the complete Linux helper workspace, real
 initramfs packing, the entire upstream build and the five-patch integration.
-Full ARM64 build results must be read from candidate CI, not inferred from
+Full ARM64 build results must be read from integration CI, not inferred from
 the previous green run. No device validation or stable release is claimed.
 
-`main` mirrors the new upstream revision without custom commits. The candidate
-merges upstream into the existing integration history without rebasing it.
-The PR targets `integration/gnome` for owner review before integration promotion.
+`main` mirrors the new upstream revision without custom commits.
+`integration/gnome` now contains that main revision, its five custom patches and
+the refreshed source lock. The owner confirmed direct main-to-integration
+synchronization; no additional branch or PR approval is required for routine
+updates. The initial merge commits are retained without rewriting history.

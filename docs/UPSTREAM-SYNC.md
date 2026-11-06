@@ -1,20 +1,23 @@
 # Upstream synchronization
 
-1. Fetch upstream and inspect new commits; update main by fast-forward only.
-2. Create a candidate branch from integration/gnome and merge the reviewed
-   upstream revision, without rewriting integration history.
-3. Compare kernel base, patch additions/deletions/content, config, initramfs and
-   helper contracts. Regenerate sources.json only after explaining each change.
-4. Re-run the scoped P0 audit, full-series application and baseline build.
-5. Check carried candidates for conflicts and equivalent fixes. Remove absorbed
-   patches explicitly with their provenance record; never silently skip failures.
-6. Build integration and review the report/config changes in a PR. Device tests
-   gate stable promotion. Never publish a stable kernel just because CI passed.
+Routine flow: `upstream/main` → local and origin `main` → `integration/gnome`.
+Do not create a candidate branch or a review PR for ordinary upstream syncs.
+This direct flow was explicitly confirmed by the owner on 2026-11-06.
 
-Current automation covers source audit, helper workspace tests, packaging
-regression, baseline build and integration build on integration pushes and
-`codex/upstream-sync-*` candidate pushes. Candidate CI runs before PR review;
-keep the last verified integration revision until the update is approved.
-Scheduled upstream detection, candidate creation and automatic PR opening are
-future work, not active jobs. Do not dispatch maintenance against an untrusted
-PR with repository write credentials.
+1. Fetch upstream and inspect new commits; fast-forward main only, then push
+   the unmodified mirror to origin/main.
+2. Switch to integration/gnome and merge main, preserving both histories.
+3. Compare kernel base, patch additions/deletions/content, config, initramfs and
+   helper contracts. Update sources.json only after reviewing those changes.
+4. Check custom patches for conflicts and absorbed fixes. Remove absorbed
+   patches explicitly with provenance; never silently skip failures.
+5. Run applicable local checks, commit the synchronization and source-lock
+   changes, and push integration/gnome to trigger CI directly.
+6. Report baseline/integration results separately from device validation.
+   Device tests gate stable promotion. Never auto-publish a stable kernel.
+
+CI covers source audit, helper workspace tests, packaging regression, baseline
+build and integration build on integration/gnome pushes. Record the last green
+source revision so that pending updates are not mistaken for validated builds.
+Scheduled upstream detection is not yet implemented. No device writes or
+stable release publication are part of source synchronization.
