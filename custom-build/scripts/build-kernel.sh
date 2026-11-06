@@ -71,7 +71,7 @@ while IFS= read -r -d '' module; do
   case "$(modinfo -F vermagic "$module")" in "$rel "*) ;; *) echo "vermagic mismatch: $module"; exit 1 ;; esac
 done < <(find "$mods/lib/modules/$rel" -name '*.ko' -print0)
 cc -O2 -o "$kout/usr/gen_init_cpio" usr/gen_init_cpio.c
-bash "$repo/kernel/initramfs/build.sh" -k "$kout" -b /bin/busybox -m "$mods/lib/modules/$rel" -c gcc \
+bash "$repo/custom-build/scripts/build-initramfs.sh" -k "$kout" -b /bin/busybox -m "$mods/lib/modules/$rel" -c gcc \
   -l "$work/initramfs.list" "$work/initramfs.cpio.gz"
 scripts/config --file "$kout/.config" --set-str INITRAMFS_SOURCE "$work/initramfs.cpio.gz"
 make "${make_args[@]}" olddefconfig

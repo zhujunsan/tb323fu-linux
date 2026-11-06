@@ -6,6 +6,15 @@ does not determine the device root filesystem version (target: Ubuntu 26.04).
 On macOS, use CI first; a Linux ARM64 Docker VM can later run the same scripts.
 No local container engine is started by these scripts.
 
+The fast audit job also runs `custom-build/tests/test-initramfs-packaging.sh`
+with real squashfs-tools and the upstream initramfs packer. It first reproduces
+the inherited `SOURCE_DATE_EPOCH`/explicit-timestamp conflict, then verifies the
+adapter creates a cpio with shared modules and preserves the parent epoch.
+Synthetic module fixtures are used here; this is not a boot or module-load test.
+`custom-build/scripts/build-initramfs.sh` removes `SOURCE_DATE_EPOCH` only from
+the packer's subprocess because upstream already fixes squashfs timestamps to
+zero. Kernel compilation retains the source-derived timestamp.
+
 ```sh
 bash custom-build/ci/install-deps.sh
 bash custom-build/scripts/build-kernel.sh baseline
