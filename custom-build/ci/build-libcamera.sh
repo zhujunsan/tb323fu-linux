@@ -10,8 +10,9 @@ export LIBCAMERA_SAN_WORK="$repo/out/libcamera-work"
 export LIBCAMERA_Y700_JOBS=4
 python3 "$repo/custom-build/scripts/audit-libcamera.py"
 bash "$repo/custom/libcamera/libcamera-af-build.sh"
-# Ship the matching modified source package with the binaries.
-(cd "$LIBCAMERA_SAN_WORK" && dpkg-source -b libcamera-0.7.0)
+# Source-only dpkg-buildpackage performs debian/rules clean before packing.
+# The binary build leaves debian/* staging trees which dpkg-source must not ship.
+(cd "$LIBCAMERA_SAN_WORK/libcamera-0.7.0" && dpkg-buildpackage -S -d -us -uc)
 output="$repo/out/libcamera-artifacts"
 mkdir -p "$output"
 cp "$LIBCAMERA_SAN_WORK"/*_arm64.deb "$output/"
