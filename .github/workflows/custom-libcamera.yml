@@ -34,23 +34,36 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import json, os, pathlib, urllib.request
-          used, page = 0, 1
-          while True:
-              url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/actions/artifacts?per_page=100&page={page}"
+          import json, os, pathlib, time, urllib.request
+          def api(path):
+              url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/{path}"
               request = urllib.request.Request(url, headers={
                   'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
                   'Accept': 'application/vnd.github+json',
               })
               with urllib.request.urlopen(request, timeout=30) as response:
-                  artifacts = json.load(response)['artifacts']
+                  return json.load(response)
+          # The parallel kernel upload has its own guard. Wait for it, then
+          # measure actual usage instead of double-reserving 100 MiB after it.
+          for attempt in range(120):
+              runs = api('actions/workflows/custom-kernel.yml/runs?branch=san-flavored&per_page=10')['workflow_runs']
+              active = [r for r in runs if r['status'] != 'completed']
+              if not active:
+                  break
+              print('Waiting for kernel artifact accounting', flush=True)
+              time.sleep(30)
+          else:
+              raise SystemExit('Kernel upload did not finish within 60 minutes')
+          used, page = 0, 1
+          while True:
+              artifacts = api(f'actions/artifacts?per_page=100&page={page}')['artifacts']
               used += sum(a['size_in_bytes'] for a in artifacts if not a['expired'])
               if len(artifacts) < 100:
                   break
               page += 1
           size = pathlib.Path('out/libcamera-san-v0.2.0-arm64.tar.gz').stat().st_size
-          # Reserve 100 MiB for the parallel kernel job's maximum archive.
-          allowed = size <= 80 * 1024**2 and used + size + 102 * 1024**2 <= 400 * 1024**2
+          allowed = size <= 80 * 1024**2 and used + size + 2 * 1024**2 <= 400 * 1024**2
+          print(f'Artifact storage {used / 1024**2:.1f} MiB; camera {size / 1024**2:.1f} MiB; cap 400 MiB')
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write('upload=' + str(allowed).lower() + '\n')
           if not allowed:
