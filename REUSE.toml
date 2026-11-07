@@ -8,7 +8,7 @@ version = 1
 # Custom integration manifests and imported kernel derivatives. Original
 # patch author/signoff headers are retained; see docs/PATCH-STATUS.md.
 [[annotations]]
-path = "custom/manifests/*.json"
+path = ["custom/manifests/*.json", "custom/version.json"]
 precedence = "closest"
 SPDX-FileCopyrightText = "2026 contributors"
 SPDX-License-Identifier = "MIT"

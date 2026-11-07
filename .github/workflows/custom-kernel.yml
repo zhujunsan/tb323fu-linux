@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - name: Audit locked P0 candidates
+      - name: Audit locked custom patch stack
         run: python3 custom-build/scripts/audit-p0.py
       - name: Test artifact storage guard
         run: python3 -m unittest discover -s custom-build/tests -p 'test_*.py'
@@ -45,6 +45,17 @@ jobs:
         profile: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.build_baseline && '["san-flavored","baseline"]' || '["san-flavored"]') }}
     steps:
       - uses: actions/checkout@v7
+      - name: Read custom release identity
+        id: version
+        run: |
+          python3 - <<'PY'
+          import json, os
+          v = json.load(open('custom/version.json'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('name=v' + v['version'] + '-' + v['upstream_kernel'] + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('## san-flavored v' + v['version'] + ' / upstream ' + v['upstream_kernel'] + '\n')
+          PY
       - name: Record runner capacity and require free public-repository compute
         env:
           GH_TOKEN: ${{ github.token }}
@@ -92,7 +103,7 @@ jobs:
         if: always() && steps.package.outputs.upload == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.profile }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: ${{ matrix.profile }}-${{ steps.version.outputs.name }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: out/upload-${{ matrix.profile }}/
           include-hidden-files: true
           compression-level: 0

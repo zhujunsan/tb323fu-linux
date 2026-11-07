@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-"""Reconstruct only P0-touched source files; never a kernel build/boot test."""
+"""Reconstruct custom-stack-touched files; never a kernel build/boot test."""
 import hashlib
 import json
 from pathlib import Path
@@ -44,10 +44,16 @@ def main():
             patch.write_bytes(data)
             paths.update(re.findall(r'^--- a/(.+)$', data.decode(), re.M))
             candidates.append((candidate['id'], patch))
+        # Some device files are introduced by the upstream device series.
+        introduced = set()
+        for patch in (REPO / 'kernel/patches').glob('*.patch'):
+            introduced.update(re.findall(r'^--- /dev/null\n\+\+\+ b/(.+)$',
+                                         patch.read_text(encoding='utf-8'), re.M))
         for path in sorted(paths):
             target = tree / path
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(download('torvalds/linux', LOCK['linux']['commit'], path))
+            if path not in introduced:
+                target.write_bytes(download('torvalds/linux', LOCK['linux']['commit'], path))
         # Apply only hunks touching these files, including all upstream changes
         # to them. This is a scoped source audit, not a full-series apply check.
         for patch in sorted((REPO / 'kernel/patches').glob('*.patch')):
@@ -62,8 +68,9 @@ def main():
             results.append({'id': ident, 'forward_applies': forward.returncode == 0,
                             'reverse_applies': reverse.returncode == 0,
                             'forward_diagnostics': forward.stderr})
-        # Check every imported patch independently on pristine project files,
-        # then the default combination in series order. patch-plan validates
+        # Independent checks above are diagnostic: later patches can depend
+        # on earlier custom patches. Require the complete selected sequence.
+        # patch-plan validates
         # local files against their original downstream checksums.
         import os
         env = dict(os.environ)
@@ -72,18 +79,14 @@ def main():
                               check=True, text=True, capture_output=True, env=env)
         selected = plan.stdout.splitlines()
         for patch in selected:
-            check = run('git', 'apply', '--check', patch, cwd=tree)
-            if check.returncode:
-                raise SystemExit(check.stderr)
-        for patch in selected:
             applied = run('git', 'apply', patch, cwd=tree)
             if applied.returncode:
                 raise SystemExit(applied.stderr)
-        print(json.dumps({'scope': 'independent checks on P0-touched files only',
+        print(json.dumps({'scope': 'ordered stack on custom-touched files only; independent checks diagnostic',
                           'integrated_series_applies': [str(Path(p).relative_to(REPO)) for p in selected],
                           'results': results}, indent=2))
-        if not all(r['forward_applies'] and not r['reverse_applies'] for r in results):
-            raise SystemExit('Candidate applicability changed: review required')
+        if any(r['reverse_applies'] for r in results):
+            raise SystemExit('Candidate may already be included: review required')
 
 
 if __name__ == '__main__':

@@ -62,8 +62,13 @@ for f in baldur baldur-display baldur-netfilter baldur-extra; do fragments+=("$r
 [ "$profile" != san-flavored ] || fragments+=("$repo/custom/config/ubuntu-security.fragment")
 scripts/kconfig/merge_config.sh -m -O "$kout" "$kout/.config" "${fragments[@]}"
 # CI/local artifacts use unique names, deliberately outside the release tNN channel.
-ident=${GITHUB_RUN_ID:-$SOURCE_DATE_EPOCH}-${GITHUB_RUN_ATTEMPT:-1}-$(git -C "$repo" rev-parse --short=12 HEAD)
-scripts/config --file "$kout/.config" --set-str LOCALVERSION "-tb323fu-ci-$profile-$ident" --disable LOCALVERSION_AUTO --set-str INITRAMFS_SOURCE ''
+ident=${GITHUB_RUN_ID:-$SOURCE_DATE_EPOCH}.${GITHUB_RUN_ATTEMPT:-1}
+if [ "$profile" = san-flavored ]; then
+  localversion=$(python3 "$repo/custom-build/scripts/kernel-version.py" "$ident")
+else
+  localversion="-tb323fu-ci-baseline-$ident"
+fi
+scripts/config --file "$kout/.config" --set-str LOCALVERSION "$localversion" --disable LOCALVERSION_AUTO --set-str INITRAMFS_SOURCE ''
 make "${make_args[@]}" olddefconfig
 if [ "$profile" = san-flavored ]; then
   grep -qx 'CONFIG_SECURITY_APPARMOR=y' "$kout/.config"
@@ -103,6 +108,7 @@ cp "$kout/arch/arm64/boot/Image" "$dtb" "$work/initramfs.cpio.gz" "$assets/"
 gzip -9 -n -c "$assets/Image" > "$assets/Image.gz"
 cp "$kout/.config" "$assets/config"
 cp "$repo/custom/manifests/sources.json" "$assets/sources.json"
+cp "$repo/custom/version.json" "$assets/custom-version.json"
 sed "s|$repo/||" "$work/selected-patches.txt" > "$assets/selected-patches.txt"
 git -C "$repo" rev-parse HEAD > "$assets/project-commit.txt"
 git rev-parse HEAD > "$assets/patched-linux-commit.txt"

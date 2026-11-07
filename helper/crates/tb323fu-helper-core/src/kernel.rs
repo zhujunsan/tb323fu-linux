@@ -1015,6 +1015,9 @@ mod tests {
         let r = Running { release: "7.3.0-rc4-tb323fu-t27".into(), version: "v".into() };
         assert_eq!(running_serial(&KernelState::default(), &r), 27);
         assert_eq!(serial_of_release("7.3.0-rc4-tb323fu-t30-jh"), 0);
+        // Custom identity precedes the existing suffix: the installed helper
+        // must compare the actual upstream base instead of treating it as 0.
+        assert_eq!(serial_of_release("7.3.0-san-v0.2.0-b42163956147.1-tb323fu-t59"), 59);
         assert!(KEYS.is_empty(), "no key is trusted by default");
         let s = Source::parse("github:joonhoekim/tb323fu-linux", "https://api.github.com/").unwrap();
         assert_eq!(s.releases_url(), "https://api.github.com/repos/joonhoekim/tb323fu-linux/releases?per_page=100");

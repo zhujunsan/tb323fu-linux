@@ -20,7 +20,7 @@ bash custom-build/ci/install-deps.sh
 bash custom-build/scripts/build-kernel.sh san-flavored
 # Optional: investigate our toolchain against the original upstream tree.
 bash custom-build/scripts/build-kernel.sh baseline
-# Separate fresh directory per selection; all five are enabled by default.
+# Separate fresh directory per selection; all 28 are enabled by default.
 BUILD_WORK=/absolute/path/gpu-only PATCH_IDS=1046,1047,1048 bash custom-build/scripts/build-kernel.sh san-flavored
 BUILD_WORK=/absolute/path/video-only PATCH_IDS=1052 bash custom-build/scripts/build-kernel.sh san-flavored
 ```
@@ -41,9 +41,11 @@ banner, embedded display DTB and embedded initramfs.
 
 `out/build-PROFILE/artifacts/` contains Image, Image.gz, display DTB, initramfs,
 config, source lock, source commits, package versions, carried patch/module
-sources and checksums. CI identities include profile, run ID, attempt and project
-commit. They are local-install/testing artifacts, not releases in the helper's
-`tNN` update channel. No stock boot image or device firmware is required or
+sources and checksums. Custom CI identities include the independent semantic
+version, build run/attempt and compatible upstream tNN suffix; the project
+commit is recorded separately. See [CUSTOM-CHANGELOG.md](CUSTOM-CHANGELOG.md).
+They remain local-install/testing artifacts, not automatically published releases.
+No stock boot image or device firmware is required or
 included. Packaging an Android boot image later requires the user's own stock
 image and upstream tooling; this job performs no partition writes.
 
@@ -54,9 +56,11 @@ Do not assume the latest release represents current upstream main. Rebuilding
 baseline is opt-in (`build_baseline=true` for workflow_dispatch, where available,
 or the local build script) for toolchain changes or regression investigations.
 If explicitly selected, both profiles run in parallel and must succeed.
-The default batch enables Wi-Fi 1041, GPU 1046/1047/1048 and Iris 1052;
-1053, 1057 and fsck remain disabled. Wi-Fi is included per the owner's preference
-for power savings; actual power/throughput impact is unmeasured. Set
+The default batch enables all 28 pinned y16 patches. The separate y17 initramfs
+fsck behavior is not part of this kernel patch stack. The deep system-domain
+power-off parameter remains disabled by default. Actual power/throughput impact
+is unmeasured. To reproduce the old five-patch selection, set
+`PATCH_IDS=1041,1046,1047,1048,1052`. Set
 `PATCH_IDS=1046,1047,1048,1052` for a no-Wi-Fi-patch comparison build in a fresh
 work directory. No release is published automatically.
 The workflow is triggered by relevant pushes to san-flavored. A manual

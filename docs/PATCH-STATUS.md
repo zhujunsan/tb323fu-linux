@@ -1,5 +1,11 @@
 # Custom Ubuntu: P0 patch audit
 
+> Superseded for current selection by [0.2.0](CUSTOM-CHANGELOG.md), 2026-11-07:
+> all 28 pinned y16 patches are imported and selected for testing. The owner
+> reports that build 42163956147 (the previous five-patch batch) boots on the
+> tablet with working dual boot. The dated audit below remains historical;
+> its untested/disabled statements do not describe the current selection.
+
 Audit date: 2026-11-06. Source lock: [`sources.json`](../custom/manifests/sources.json).
 Upstream project: `e236668a086a28889c4431a4545951aa316c00e1`; Linux:
 `v7.3`, `c03c1a14507dfaf8b856c2608f9ac216021fc222`. Downstream reference:

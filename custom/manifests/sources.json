@@ -163,12 +163,208 @@
   },
   "candidates": [
     {
+      "id": "00y1",
+      "path": "linux/kernel-y16/patches/00y1-media-iris-decode-order-display-delay-and-deblock-controls.patch",
+      "sha256": "e24d05628c5c95da65351f2a00e8da8c826008b7bac4072c860f654ab73b2136",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/00y1-media-iris-decode-order-display-delay-and-deblock-controls.patch",
+      "device": "not-tested",
+      "author": "\"y700 workspace (from code002-2/sm8750-video-accel)\"",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "00y2",
+      "path": "linux/kernel-y16/patches/00y2-power-supply-qcom_battmgr-status-power_now-and-charge-units-on-kaanapali.patch",
+      "sha256": "c61093b39362077532c1a97867e5a74879cee716f02fe4d68bb20269f7b4bfcd",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "power/00y2-power-supply-qcom_battmgr-status-power_now-and-charge-units-on-kaanapali.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "00y3",
+      "path": "linux/kernel-y16/patches/00y3-wifi-ath12k-wcn7860-no-mlo-unless-asked.patch",
+      "sha256": "4eb4f6096f72d24877980354096565fe4249942e2c4d1a94a7425845866cc147",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "wifi/00y3-wifi-ath12k-wcn7860-no-mlo-unless-asked.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "00y4",
+      "path": "linux/kernel-y16/patches/00y4-wifi-ath12k-wcn7860-5g-160-knob.patch",
+      "sha256": "1e146099ecc196c2073cbac47b9bc2f018b949d625e132fe8108bf641c8311f1",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "wifi/00y4-wifi-ath12k-wcn7860-5g-160-knob.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "00y5",
+      "path": "linux/kernel-y16/patches/00y5-wifi-ath12k-no-backup-beacon-miss-timer-for-stations.patch",
+      "sha256": "5be201a5d0d93c53879b59c97f7218e5f70a83a57016679c4e55842b4a008d4b",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "wifi/00y5-wifi-ath12k-no-backup-beacon-miss-timer-for-stations.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "0540",
+      "path": "linux/kernel-y16/patches/0540-arm64-signal-reapply-the-ssbs-policy-on-sigreturn-sm8850.patch",
+      "sha256": "2b09aa651fd5aaea6d8261442cc5b9b98e782fdac3d93b34a4c6c2bc4935479a",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "system/0540-arm64-signal-reapply-the-ssbs-policy-on-sigreturn-sm8850.patch",
+      "device": "not-tested",
+      "author": "Armada <noreply@armada.local>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "0620",
+      "path": "linux/kernel-y16/patches/0620-drm-msm-a6xx-hfi-irq-clears-only-the-cm3-fault.patch",
+      "sha256": "eaac34f6919b11789ebe17eb71f5c0bdd397b94826d99e0df471f8d1dca6dcff",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "gpu/0620-drm-msm-a6xx-hfi-irq-clears-only-the-cm3-fault.patch",
+      "device": "not-tested",
+      "author": "gennro <gennro2004@gmail.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "0621",
+      "path": "linux/kernel-y16/patches/0621-drm-msm-a6xx-bound-the-gmu-wait-for-a-fault-devcoredump.patch",
+      "sha256": "0d18e275638e466f0eab42a6b3cffeaf29aee6cb90740f5181042b7bb712a015",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "gpu/0621-drm-msm-a6xx-bound-the-gmu-wait-for-a-fault-devcoredump.patch",
+      "device": "not-tested",
+      "author": "gennro <gennro2004@gmail.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "0622",
+      "path": "linux/kernel-y16/patches/0622-drm-msm-a6xx-mask-the-hfi-interrupt-before-booting-the-gmu.patch",
+      "sha256": "96056c654bf0dc9330f221d8799e0e1fa13648e2a8e122d4f690f46e39a734ed",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "gpu/0622-drm-msm-a6xx-mask-the-hfi-interrupt-before-booting-the-gmu.patch",
+      "device": "not-tested",
+      "author": "Armada <noreply@armada.local>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1030",
+      "path": "linux/kernel-y16/patches/1030-media-iris-send-the-stream-POC-type.patch",
+      "sha256": "5a3e5632207fe1e35674a7dbe4e259c5a0d3ab32ddb4e5d8767c6fd9f8998f92",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/1030-media-iris-send-the-stream-POC-type.patch",
+      "device": "not-tested",
+      "author": "Diogo Trindade <diogotr7@gmail.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1031",
+      "path": "linux/kernel-y16/patches/1031-media-iris-stop-AV1-tier-overwriting-HEVC-tier.patch",
+      "sha256": "f5613fb36eacb36b605cb6a93fc0d0611d0db162502accc089b7720fef46c47a",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/1031-media-iris-stop-AV1-tier-overwriting-HEVC-tier.patch",
+      "device": "not-tested",
+      "author": "Diogo Trindade <diogotr7@gmail.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1032",
+      "path": "linux/kernel-y16/patches/1032-media-iris-send-the-decoder-the-colour-info-the-firmware-reported.patch",
+      "sha256": "f596368c4276b7d182fb4965bebbad22e7dd267106c834d2c5c0b35d370fda2f",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/1032-media-iris-send-the-decoder-the-colour-info-the-firmware-reported.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1033",
+      "path": "linux/kernel-y16/patches/1033-media-iris-send-the-decoder-the-bitstream-resolution-the-firmware-reported.patch",
+      "sha256": "a432874446b95344b12c54b055c964fa7b12fa6b99371bf579dbe97ed8ad410c",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/1033-media-iris-send-the-decoder-the-bitstream-resolution-the-firmware-reported.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series",
+        "patch:1032"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
       "id": "1041",
       "path": "linux/kernel-y16/patches/1041-ath12k-sta-ps-vif-cfg.patch",
       "sha256": "0594e1a4392292e7429ebbb1b872d0fcec546cd55a213e8f82134cdd2f345390",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending-upstream-refresh",
+      "build": "pending-expanded-stack",
       "device": "not-tested",
       "local_patch": "wifi/1041-ath12k-sta-ps-vif-cfg.patch",
       "local_sha256": "3057d092c1850f2cd18cccd5c24554bd383f815c9d9e4f57ec46a4f4ee069cf5",
@@ -182,7 +378,38 @@
       "adaptations": [
         "Omit personal downstream MODULE_VERSION marker; functional changes unchanged"
       ],
-      "decision": "Owner prioritizes power saving over potential throughput loss; enabled for testing, no measured gain or hardware validation"
+      "decision": "Owner prioritizes power saving over potential throughput loss; enabled for testing, no measured gain or hardware validation",
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1042",
+      "path": "linux/kernel-y16/patches/1042-memlat-android-tuning.patch",
+      "sha256": "b8563aed9f7790810bc47677ee53537d5d013081214f5fcb6362884bd5366d30",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "power/1042-memlat-android-tuning.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1043",
+      "path": "linux/kernel-y16/patches/1043-cpuidle-psci-domain-allow_system_off.patch",
+      "sha256": "297beb5aea59c01d46a7199ca28ae0efd89eea4738617980b58f5269b4389465",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "power/1043-cpuidle-psci-domain-allow_system_off.patch",
+      "device": "not-tested",
+      "author": "bobsixsixsix-boop <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1046",
@@ -190,7 +417,7 @@
       "sha256": "bed783ff07e4ad1a7ebaa0a2d9b566aa67e52e01611db1996c51d384067b0f55",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending-upstream-refresh",
+      "build": "pending-expanded-stack",
       "device": "not-tested",
       "local_patch": "gpu/1046-drm-msm-a6xx-honor-perfmode_bw-threshold-on-a8x.patch",
       "author": "Akhil P Oommen",
@@ -199,7 +426,8 @@
       "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
-      ]
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1047",
@@ -207,7 +435,7 @@
       "sha256": "bc1181717ef829d440562e81c8e817fa591ef656597d0836c0b9404444689b67",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending-upstream-refresh",
+      "build": "pending-expanded-stack",
       "device": "not-tested",
       "local_patch": "gpu/1047-drm-msm-a6xx-fix-secondary-rail-vote-in-arc-votes.patch",
       "author": "Akhil P Oommen",
@@ -216,7 +444,8 @@
       "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
-      ]
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1048",
@@ -224,7 +453,7 @@
       "sha256": "7c6962aa5a969d9c3e42993330141076d06eb172528528e893775bc1a661eeb9",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending-upstream-refresh",
+      "build": "pending-expanded-stack",
       "device": "not-tested",
       "local_patch": "gpu/1048-drm-msm-a6xx-fix-rpmh-dependency-votes.patch",
       "author": "Akhil P Oommen",
@@ -233,7 +462,38 @@
       "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
-      ]
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1050",
+      "path": "linux/kernel-y16/patches/1050-drm-msm-dpu-reject-undersized-gamma-lut.patch",
+      "sha256": "3c473f076216aa2066510390f43cc2c311f430d0f51e2613172184f310012232",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "gpu/1050-drm-msm-dpu-reject-undersized-gamma-lut.patch",
+      "device": "not-tested",
+      "author": "y700 workspace <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1051",
+      "path": "linux/kernel-y16/patches/1051-media-iris-preserve-timestamps-on-error-buffers.patch",
+      "sha256": "84a19ac1a0c1d0d2a4984426808a9a1bdef7bcb5dd459adafc248d54fd1fa1c5",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "video/1051-media-iris-preserve-timestamps-on-error-buffers.patch",
+      "device": "not-tested",
+      "author": "Xilin Wu <sophon@radxa.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1052",
@@ -241,7 +501,7 @@
       "sha256": "6ef812c7ccd616caae2f50dc305537a41a225834c3e3fa2a584f8b8dfd6f2fd4",
       "enabled": true,
       "status": "integrated-testing",
-      "build": "pending-upstream-refresh",
+      "build": "pending-expanded-stack",
       "device": "not-tested",
       "local_patch": "video/1052-media-iris-recycle-decoder-buffers-for-non-display-pictures.patch",
       "author": "Xilin Wu",
@@ -250,28 +510,101 @@
       "validated": "2026-11-06",
       "dependencies": [
         "upstream-device-series"
-      ]
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1053",
       "path": "linux/kernel-y16/patches/1053-soc-qcom-smp2p-reset-inbound-state-only-on-restart.patch",
       "sha256": "b34192b7aed9168c0cf9e67094329de899ae41802bf2706ce715f66495b2ff11",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "device": "not-tested",
+      "local_patch": "system/1053-soc-qcom-smp2p-reset-inbound-state-only-on-restart.patch",
+      "author": "Armada <noreply@armada.local>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1054",
+      "path": "linux/kernel-y16/patches/1054-HID-uhid-read-the-output-queue-under-qlock.patch",
+      "sha256": "7896671574942d4824042e4fb3f4acb8eae433fcfdda05ac79d208cd82ee5c51",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "system/1054-HID-uhid-read-the-output-queue-under-qlock.patch",
+      "device": "not-tested",
+      "author": "Armada <noreply@armada.local>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1055",
+      "path": "linux/kernel-y16/patches/1055-wifi-ath12k-fix-single-pdev-frequency-ranges.patch",
+      "sha256": "bf8f943402ad49e6061c5dd82f0e4933a69ce0554b43c2ac9b249daa300d8516",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "wifi/1055-wifi-ath12k-fix-single-pdev-frequency-ranges.patch",
+      "device": "not-tested",
+      "author": "Shenghan Gao <gsh20040816@gmail.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1056",
+      "path": "linux/kernel-y16/patches/1056-arm64-dts-qcom-baldur-wifi-root-port-t-power-on-80us.patch",
+      "sha256": "689c03fc331add20edeb755203cc9db7b4e50a90bdede96ed606b7c86fae0683",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "wifi/1056-arm64-dts-qcom-baldur-wifi-root-port-t-power-on-80us.patch",
+      "device": "not-tested",
+      "author": "y700 workspace <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     },
     {
       "id": "1057",
       "path": "linux/kernel-y16/patches/1057-media-iris-vpu4x-size-the-AV1-line-buffer-for-10-bit-output.patch",
       "sha256": "2f8c16f2d57bcddb4a5409f464fb2f037b8ecf2dcb0c7291a2072e803cbdc0c8",
-      "enabled": false,
-      "status": "audit-candidate",
-      "build": "not-run",
-      "device": "not-tested"
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "device": "not-tested",
+      "local_patch": "video/1057-media-iris-vpu4x-size-the-AV1-line-buffer-for-10-bit-output.patch",
+      "author": "y700 workspace <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
+    },
+    {
+      "id": "1058",
+      "path": "linux/kernel-y16/patches/1058-firmware-qcom-scm-disable-SDI-when-download-mode-is-switched-off.patch",
+      "sha256": "a3089e0043e4a3a4d890399d2f7b325a3851bb5f1072a366a5d9931f1cc6f1d4",
+      "enabled": true,
+      "status": "integrated-testing",
+      "build": "pending-expanded-stack",
+      "local_patch": "system/1058-firmware-qcom-scm-disable-SDI-when-download-mode-is-switched-off.patch",
+      "device": "not-tested",
+      "author": "y700 workspace <304558835+bobsixsixsix-boop@users.noreply.github.com>",
+      "dependencies": [
+        "upstream-device-series"
+      ],
+      "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     }
   ],
-  "audited": "2026-11-06",
+  "audited": "2026-11-07",
   "previous_verified_build": {
     "project_commit": "10fa3f366f1be21aa6748f4616249496c1b20754",
     "upstream_commit": "2ba0908546b482792d3bf03a102799060b90553e",
@@ -288,5 +621,17 @@
     "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t59",
     "usage": "Upstream Image/modules/config reference; routine CI builds only san-flavored",
     "kernel_inputs_match_current_upstream": true
+  },
+  "previous_device_report": {
+    "date": "2026-11-07",
+    "build_run": "42163956147",
+    "patch_ids": [
+      "1041",
+      "1046",
+      "1047",
+      "1048",
+      "1052"
+    ],
+    "result": "Owner reports successful tablet boot and working dual boot; no per-feature measurements claimed"
   }
 }

@@ -23,6 +23,12 @@ selected = ({i.strip() for i in requested.split(',') if i.strip()}
 unknown = selected - {c['id'] for c in records.values()}
 if unknown:
     raise SystemExit(f'Unknown/unimported patch IDs: {sorted(unknown)}')
+for candidate in records.values():
+    if candidate['id'] in selected:
+        required = {d.removeprefix('patch:') for d in candidate.get('dependencies', [])
+                    if d.startswith('patch:')}
+        if required - selected:
+            raise SystemExit(f"Patch {candidate['id']} requires {sorted(required - selected)}")
 for path in series:
     candidate = records[path]
     target = (root / path).resolve()
