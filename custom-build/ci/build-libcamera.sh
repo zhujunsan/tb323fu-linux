@@ -22,7 +22,7 @@ cp "$repo/custom/libcamera/"libcamera-af-{install,check}.sh "$output/"
 cp "$repo/custom/libcamera/README.md" "$repo/custom/libcamera/source-lock.json" "$output/"
 cp "$repo/custom/version.json" "$output/custom-version.json"
 cp "$repo/LICENSES/GPL-3.0-or-later.txt" "$repo/LICENSES/LGPL-2.1-or-later.txt" "$output/"
-git -C "$repo" rev-parse HEAD > "$output/project-commit.txt"
+git -c safe.directory="$repo" -C "$repo" rev-parse HEAD > "$output/project-commit.txt"
 (cd "$output" && sha256sum -- * > SHA256SUMS)
 tar -C "$output" -czf "$repo/out/libcamera-san-v0.2.0-arm64.tar.gz" .
 echo 'LIBCAMERA BUILD COMPLETE: no hardware autofocus test or tablet installation performed.'
