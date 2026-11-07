@@ -34,10 +34,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import json, os, pathlib, subprocess
-          pages = json.loads(subprocess.check_output(['gh', 'api', '--paginate', '--slurp',
-              f"repos/{os.environ['GITHUB_REPOSITORY']}/actions/artifacts?per_page=100"]))
-          used = sum(a['size_in_bytes'] for p in pages for a in p['artifacts'] if not a['expired'])
+          import json, os, pathlib, urllib.request
+          used, page = 0, 1
+          while True:
+              url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/actions/artifacts?per_page=100&page={page}"
+              request = urllib.request.Request(url, headers={
+                  'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                  'Accept': 'application/vnd.github+json',
+              })
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  artifacts = json.load(response)['artifacts']
+              used += sum(a['size_in_bytes'] for a in artifacts if not a['expired'])
+              if len(artifacts) < 100:
+                  break
+              page += 1
           size = pathlib.Path('out/libcamera-san-v0.2.0-arm64.tar.gz').stat().st_size
           # Reserve 100 MiB for the parallel kernel job's maximum archive.
           allowed = size <= 80 * 1024**2 and used + size + 102 * 1024**2 <= 400 * 1024**2
