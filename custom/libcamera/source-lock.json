@@ -1,0 +1,48 @@
+{
+  "repository": "bobsixsixsix-boop/legion-y700-gen5",
+  "commit": "4240ea715133574fd335f2e1631a450f09c8c16e",
+  "source_directory": "linux/camera",
+  "files": [
+    {
+      "path": "libcamera-af-build.sh",
+      "sha256": "405e3f762e3837e680f664b80680442dfb375fe99a7c05db65c1234ae187998b",
+      "local_sha256": "da6a138ab4a9a07caaa9d4ac9569f9b85a7e49ebe0046cea81f0b6e9d6eaa1c1"
+    },
+    {
+      "path": "libcamera-af-install.sh",
+      "sha256": "9310c2d93b2094271ec5b04e54d73dc946c72c60546ae7dd2c4e27102d3a4408",
+      "local_sha256": "9b7e9a56acef5cb3c4ba3b0a35943ad21d2cb4b223250bc230b497618281b886"
+    },
+    {
+      "path": "libcamera-af-check.sh",
+      "sha256": "3f98c9aa186d6efddb8850e28d07c77dcffc1b44db2dcbd25bda8730d93cf6a2",
+      "local_sha256": "1606cd709b8bf1fb8b3367f0aaf047db10e1170dbbc194e5e1d1066a78cf102b"
+    },
+    {
+      "path": "patches/y700-0001-simple-manual-focus-control.patch",
+      "sha256": "f7b3e366f85b51d6f752f4bf2a69bfcdcd247299a7f55a31ecc4c9c7649bc3cf"
+    },
+    {
+      "path": "patches/y700-0002-softisp-gradient-focus-metric.patch",
+      "sha256": "f1ebd8b7c1fc3b0ead63ca9eb275dc00b023ab8801b9c5e7c94e64b6b808b3d4"
+    },
+    {
+      "path": "patches/y700-0003-simple-contrast-detect-autofocus.patch",
+      "sha256": "ec9699c47c9cad9e4b5d35a7555a468c75978a2e2f1a42a2f05cd0bf4409ce11"
+    },
+    {
+      "path": "patches/y700-0004-simple-autofocus-defaults-settling.patch",
+      "sha256": "f84d1c36d12fd11270429c4a7fbbe2bfe46e89df3c6ac5fa47cbf639e2490608"
+    },
+    {
+      "path": "patches/y700-0005-lens-open-only-while-streaming.patch",
+      "sha256": "6d916b12fd6603291ff2b6ed8fea435424e1103e014c242b40eff53c48cfb1ae"
+    }
+  ],
+  "adaptations": [
+    "Keep all five patch files byte-for-byte",
+    "Change package version to +san0.2.0 and build maintainer",
+    "Use configurable san build paths and UID-derived desktop user",
+    "Reject downgrades from newer installed versions"
+  ]
+}

@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: MIT
+name: san-flavored autofocus
+on:
+  push:
+    branches: [san-flavored]
+    paths: ['custom/libcamera/**', 'custom/version.json', 'custom-build/ci/build-libcamera.sh', 'custom-build/scripts/audit-libcamera.py', '.github/workflows/custom-libcamera.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: custom-libcamera-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  libcamera:
+    runs-on: ubuntu-24.04-arm
+    container: ubuntu:26.04
+    timeout-minutes: 90
+    steps:
+      - name: Install source and packaging tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates curl dpkg-dev python3 gh
+      - uses: actions/checkout@v7
+      - name: Require free public-repository compute
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: test "$(gh api "repos/$GITHUB_REPOSITORY" --jq .private)" = false
+      - name: Build and verify Ubuntu ARM64 autofocus packages
+        run: bash custom-build/ci/build-libcamera.sh
+      - name: Check artifact storage budget
+        id: budget
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          pages = json.loads(subprocess.check_output(['gh', 'api', '--paginate', '--slurp',
+              f"repos/{os.environ['GITHUB_REPOSITORY']}/actions/artifacts?per_page=100"]))
+          used = sum(a['size_in_bytes'] for p in pages for a in p['artifacts'] if not a['expired'])
+          size = pathlib.Path('out/libcamera-san-v0.2.0-arm64.tar.gz').stat().st_size
+          # Reserve 100 MiB for the parallel kernel job's maximum archive.
+          allowed = size <= 80 * 1024**2 and used + size + 102 * 1024**2 <= 400 * 1024**2
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('upload=' + str(allowed).lower() + '\n')
+          if not allowed:
+              raise SystemExit('Camera artifacts exceed the shared repository budget; build logs retained')
+          PY
+      - name: Upload autofocus packages and matching source
+        if: steps.budget.outputs.upload == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: libcamera-san-v0.2.0-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/libcamera-san-v0.2.0-arm64.tar.gz
+          compression-level: 0
+          retention-days: 3

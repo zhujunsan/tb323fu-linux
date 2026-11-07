@@ -38,8 +38,12 @@ CI artifacts carry the custom version in their name and include
 `custom-version.json`, the exact kernel release, patch selection and source lock.
 CI builds are testing artifacts, not a hardware-validated stable release.
 
-The separate libcamera autofocus package and y17 initramfs filesystem-check
-work are outside the y16 28-patch stack and are tracked independently.
+This release also builds the separate libcamera autofocus/lens-power component
+as `0.7.0-1ubuntu2+san0.2.0` for Ubuntu 26.04 ARM64. Its five patches and
+source-locked build/install/device-check scripts are in `custom/libcamera/`.
+The dedicated autofocus workflow ships seven matching packages and the modified
+source package; installing only the kernel does not install the camera fix.
+The y17 initramfs filesystem-check work is tracked independently.
 
 ## Previous five-patch build
 

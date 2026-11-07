@@ -19,6 +19,24 @@ precedence = "override"
 SPDX-FileCopyrightText = "The authors named in each patch (From:, Signed-off-by:; see docs/PATCH-STATUS.md)"
 SPDX-License-Identifier = "GPL-2.0-only"
 
+[[annotations]]
+path = "custom/libcamera/*.sh"
+precedence = "override"
+SPDX-FileCopyrightText = ["2026 bobsixsixsix-boop", "2026 San"]
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = "custom/libcamera/patches/*.patch"
+precedence = "override"
+SPDX-FileCopyrightText = ["2026 Osilvfe", "2026 mzak", "The libcamera contributors", "2026 bobsixsixsix-boop"]
+SPDX-License-Identifier = "LGPL-2.1-or-later"
+
+[[annotations]]
+path = "custom/libcamera/source-lock.json"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 contributors"
+SPDX-License-Identifier = "MIT"
+
 # Copyright of the project-written files (NOTICE: held by Joonhoe Kim unless a file
 # names other holders), added to whatever the file says. Imported code is
 # overridden further down.

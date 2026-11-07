@@ -12,6 +12,9 @@ Never merge the downstream repository wholesale or rewrite existing history.
 - `custom/version.json`: independent custom semantic version and upstream tNN
   compatibility identity; see `CUSTOM-CHANGELOG.md` for update semantics.
 - `custom/config/`: integration fragments, starting with Ubuntu security.
+- `custom/libcamera/`: five source-locked autofocus/lens-power patches and
+  adapted build/install/check scripts. The dedicated custom-libcamera workflow
+  builds Ubuntu 26.04 ARM64 packages alongside the kernel workflow.
 - `custom-build/scripts/`: scoped source audit and native ARM64 build driver.
 - `custom-build/ci/`: build-host provisioning.
 - `.github/workflows/custom-kernel.yml`: fast audit/packaging checks, then the
