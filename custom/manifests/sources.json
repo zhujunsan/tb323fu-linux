@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "joonhoekim/tb323fu-linux",
-    "commit": "e236668a086a28889c4431a4545951aa316c00e1"
+    "commit": "099d3d081e860cfc300502387b66e9343c056619"
   },
   "linux": {
     "repository": "https://github.com/torvalds/linux.git",
@@ -633,5 +633,13 @@
       "1052"
     ],
     "result": "Owner reports successful tablet boot and working dual boot; no per-feature measurements claimed"
+  },
+  "latest_verified_custom_build": {
+    "project_commit": "f78cf05bc03aa894442f82cdf1e59dae219177bd",
+    "ci_url": "https://github.com/zhujunsan/tb323fu-linux/actions/runs/42377391751",
+    "patch_count": 28,
+    "kernel": "success",
+    "device": "not-tested",
+    "date": "2026-11-07"
   }
 }
