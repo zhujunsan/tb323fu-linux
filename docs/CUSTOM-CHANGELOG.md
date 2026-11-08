@@ -1,5 +1,18 @@
 # san-flavored kernel versions
 
+## 0.3.0 (2026-11-08, testing)
+
+Updates the upstream base to kernel-t61 / `3cc8131`, with 198 upstream patches
+and all 28 custom patches. Adds upstream DisplayPort MST, external-display boot
+and suspend/resume fixes, built-in dwc3 glue, and the Iris restricted-IOVA fix.
+8K HEVC Main10 still does not decode; the upstream fix prevents a tablet reset.
+The kernel identity ends in `-tb323fu-t61`, preserving stock helper comparisons.
+
+Autofocus remains package `0.7.0-1ubuntu2+san0.2.0`; its code and ABI did not
+change. `custom/version.json` records its component version independently.
+Existing autofocus installations need no package change for this kernel update.
+See [the sync report](UPSTREAM-SYNC-2026-11-08.md) for scope and release delivery.
+
 ## 0.2.0 (2026-11-07, testing)
 
 Based on the locked upstream kernel-t59 inputs (Linux v7.3). The complete

@@ -6,6 +6,10 @@ on:
     paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
   workflow_dispatch:
     inputs:
+      release_tag:
+        description: Upload successful kernel outputs to this existing draft release
+        type: string
+        default: ''
       build_baseline:
         description: Also rebuild the original upstream baseline for an explicit investigation
         type: boolean
@@ -34,6 +38,9 @@ jobs:
       - name: Reproduce timestamp conflict and verify real initramfs packaging
         run: bash custom-build/tests/test-initramfs-packaging.sh
   kernel:
+    permissions:
+      contents: write
+      actions: read
     name: ${{ matrix.profile }}
     needs: audit
     runs-on: ubuntu-24.04-arm
@@ -85,6 +92,12 @@ jobs:
             ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-${{ matrix.profile }}-
       - name: Install native ARM64 build dependencies
         run: bash custom-build/ci/install-deps.sh
+      - name: Check requested draft release identity
+        if: matrix.profile == 'san-flavored' && github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: python3 custom-build/ci/stage-kernel-release.py --check
       - name: Build kernel and verify artifacts
         env:
           BUILD_JOBS: '4'
@@ -99,6 +112,12 @@ jobs:
           PROFILE: ${{ matrix.profile }}
           BUILD_RESULT: ${{ job.status }}
         run: python3 custom-build/ci/prepare-upload.py "$PROFILE" "$BUILD_RESULT"
+      - name: Stage verified kernel in the requested draft release
+        if: success() && matrix.profile == 'san-flavored' && github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: python3 custom-build/ci/stage-kernel-release.py
       - name: Upload bounded artifacts and diagnostics
         if: always() && steps.package.outputs.upload == 'true'
         uses: actions/upload-artifact@v4

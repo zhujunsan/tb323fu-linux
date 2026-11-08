@@ -9,7 +9,8 @@ import urllib.request
 repo = Path(__file__).resolve().parents[2]
 root = repo / 'custom/libcamera'
 lock = json.loads((root / 'source-lock.json').read_text())
-version = json.loads((repo / 'custom/version.json').read_text())['version']
+identity = json.loads((repo / 'custom/version.json').read_text())
+version = identity.get('libcamera_version', identity['version'])
 for entry in lock['files']:
     path = entry['path']
     url = f"https://raw.githubusercontent.com/{lock['repository']}/{lock['commit']}/{lock['source_directory']}/{path}"

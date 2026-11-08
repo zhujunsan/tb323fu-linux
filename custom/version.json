@@ -1,4 +1,5 @@
 {
-  "version": "0.2.0",
-  "upstream_kernel": "t59"
+  "version": "0.3.0",
+  "upstream_kernel": "t61",
+  "libcamera_version": "0.2.0"
 }
