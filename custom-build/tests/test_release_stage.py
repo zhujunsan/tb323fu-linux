@@ -28,7 +28,7 @@ class ReleaseStageTest(unittest.TestCase):
             if corrupt:
                 (assets / 'Image.gz').write_bytes(b'corrupted download')
             env = {'RELEASE_TAG': 'san-v0.3.0-t61', 'GITHUB_REPOSITORY': 'test/repo', 'GITHUB_SHA': 'abc123'}
-            with patch.object(stage.subprocess, 'check_output', return_value=json.dumps({'draft': draft, 'target_commitish': source}).encode()), \
+            with patch.object(stage.subprocess, 'check_output', return_value=json.dumps({'isDraft': draft, 'targetCommitish': source}).encode()), \
                  patch.object(stage.subprocess, 'run') as upload:
                 if not draft or source != 'abc123' or corrupt:
                     with self.assertRaises(AssertionError):

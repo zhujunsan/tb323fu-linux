@@ -17,9 +17,12 @@ def stage(repo, environment, check_only=False):
     tag = environment['RELEASE_TAG']
     assert tag == expected and re.fullmatch(r'san-v\d+\.\d+\.\d+-t\d+', tag), 'Unexpected tag'
     repository = environment['GITHUB_REPOSITORY']
-    release = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repository}/releases/tags/{tag}']))
-    assert release['draft'], 'Only an existing draft may receive build outputs'
-    assert release['target_commitish'] == environment['GITHUB_SHA'], 'Draft/CI source mismatch'
+    # Drafts have no public tag endpoint until publication. The CLI resolves
+    # them by their intended tag through the authenticated release listing.
+    release = json.loads(subprocess.check_output(['gh', 'release', 'view', tag,
+                        '--repo', repository, '--json', 'isDraft,targetCommitish']))
+    assert release['isDraft'], 'Only an existing draft may receive build outputs'
+    assert release['targetCommitish'] == environment['GITHUB_SHA'], 'Draft/CI source mismatch'
     if check_only:
         print('Draft source identity checked')
         return
