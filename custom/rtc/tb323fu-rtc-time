@@ -1,0 +1,90 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: MIT
+"""Read the Qualcomm RTC together with Android's persistent TOD offset.
+
+Never writes the raw RTC or the Android persist partition.
+"""
+import argparse
+import ctypes
+import datetime as dt
+import pathlib
+import struct
+import subprocess
+import sys
+import time
+
+MIN_EPOCH = 1735689600  # 2025-01-01 UTC
+MAX_EPOCH = 4102444800  # 2100-01-01 UTC
+BLOCK_SYSFS = pathlib.Path('/sys/class/block')
+RTC_SECONDS = pathlib.Path('/sys/class/rtc/rtc0/since_epoch')
+
+
+def system_clock_synchronized():
+    # modes=0 queries adjtimex without changing the clock. Its return value is
+    # TIME_ERROR (5) while unsynchronized, and 0..4 for synchronized states.
+    # An aligned, zeroed buffer larger than struct timex avoids depending on
+    # that structure's architecture-specific padding; no fields are inspected.
+    libc = ctypes.CDLL(None, use_errno=True)
+    query = libc.adjtimex
+    query.argtypes = [ctypes.c_void_p]
+    query.restype = ctypes.c_int
+    timex = (ctypes.c_long * 128)()
+    return query(ctypes.byref(timex)) in range(5)
+
+
+def read_hardware_time():
+    # Discover persist by GPT label rather than assuming a fixed /dev/sda3.
+    devices = []
+    for entry in BLOCK_SYSFS.glob('*/uevent'):
+        fields = dict(line.split('=', 1) for line in entry.read_text().splitlines() if '=' in line)
+        if fields.get('PARTNAME') == 'persist':
+            devices.append(pathlib.Path('/dev') / fields['DEVNAME'])
+    if len(devices) != 1:
+        raise RuntimeError(f'Expected exactly one persist partition; found {len(devices)}')
+    result = subprocess.run(['/usr/sbin/debugfs', '-R', 'cat /time/ats_2', str(devices[0])],
+                            check=True, capture_output=True, timeout=5)
+    if len(result.stdout) != 8:
+        raise RuntimeError('Android TOD offset is missing or has an unexpected size')
+    offset_ms = struct.unpack('<Q', result.stdout)[0]
+    rtc = int(RTC_SECONDS.read_text())
+    corrected = rtc + offset_ms / 1000
+    if not MIN_EPOCH <= corrected < MAX_EPOCH:
+        raise RuntimeError('RTC plus Android offset is outside 2025-2099; refusing to use it')
+    return rtc, offset_ms, corrected, time.monotonic()
+
+def iso(epoch):
+    return dt.datetime.fromtimestamp(epoch, dt.timezone.utc).isoformat(timespec='milliseconds')
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--restore', action='store_true', help='restore an invalid system date at boot')
+    args = parser.parse_args()
+    if args.restore and system_clock_synchronized():
+        print('System clock is already synchronized; RTC restore skipped.')
+        return
+    # Device probing can still be finishing after udev-trigger. Wait only for
+    # our RTC/partition, rather than blocking boot on global udev-settle.
+    deadline = time.monotonic() + (5 if args.restore else 0)
+    while True:
+        try:
+            rtc, offset_ms, corrected, sampled = read_hardware_time()
+            break
+        except (FileNotFoundError, RuntimeError):
+            if time.monotonic() >= deadline:
+                raise
+            time.sleep(0.2)
+    print(f'Raw RTC (UTC):       {iso(rtc)}')
+    print(f'Android TOD offset:  {offset_ms} milliseconds')
+    print(f'Corrected RTC (UTC): {iso(corrected)}')
+    if args.restore:
+        time.clock_settime(time.CLOCK_REALTIME, corrected + time.monotonic() - sampled)
+        print('Restored system clock from RTC plus Android TOD offset.')
+    else:
+        print(f'System minus corrected RTC: {time.time() - corrected:.3f} seconds (RTC has one-second resolution)')
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        print(f'tb323fu-rtc-time: {exc}', file=sys.stderr)
+        sys.exit(1)

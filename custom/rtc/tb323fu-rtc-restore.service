@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+[Unit]
+Description=Restore Qualcomm RTC time using Android persistent TOD offset
+DefaultDependencies=no
+After=local-fs.target systemd-udev-trigger.service
+Before=sysinit.target time-set.target chrony.service chronyd.service systemd-timesyncd.service
+Conflicts=shutdown.target
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/tb323fu-rtc-time --restore
+RemainAfterExit=yes
+TimeoutStartSec=15
+
+[Install]
+WantedBy=sysinit.target

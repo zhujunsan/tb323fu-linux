@@ -11,9 +11,20 @@ grows to fill the partition); after that the desktop is up some seconds after th
 system: [Distributions](distros.md)). GNOME logs you in automatically.
 
 **Wi-Fi:** top right → Wi-Fi → pick your network → a notification asks for the password. Until then the clock is
-wrong (Android keeps the real time in a place Linux cannot read); it sets itself once the network is up. The time
+wrong unless RTC offset recovery is installed: this device's RTC counter needs the Android time-of-day offset
+from the persist partition. The default startup does not apply it; network time synchronization corrects the clock
+once the network is up. The time
 zone comes from the PC you built on. A Wi-Fi icon with a `?` means the internet check failed; it usually clears
 within a minute.
+
+**san-flavored t61 time and TUN fix:** the custom kernel enables IPv4 and IPv6 policy routing, which Mihomo's
+TUN `auto-route` needs in addition to `CONFIG_TUN`. Install the RTC userspace component once in each Linux root
+with `sudo sh custom/rtc/install.sh` from this checkout, or extract the CI artifact's `rtc-userspace.tar.gz` first
+and run the same command. This enables `tb323fu-rtc-restore.service` before network time clients. It restores an
+unsynchronized system clock from `rtc0/since_epoch + persist/time/ats_2 / 1000`; an already synchronized clock
+is left alone. Read the corrected hardware time with `sudo /usr/local/sbin/tb323fu-rtc-time`.
+The tool opens persist read-only through `debugfs` and never writes the raw RTC counter or Android's offset file.
+Plain `hwclock` still shows the raw counter; a 1970 date there does not mean the hardware clock is broken.
 
 In GNOME's Terminal:
 

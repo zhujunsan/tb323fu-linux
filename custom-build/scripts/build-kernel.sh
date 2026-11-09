@@ -59,7 +59,10 @@ echo "Build profile=$profile jobs=$jobs ccache=${USE_CCACHE:-0}"
 make "${make_args[@]}" defconfig
 fragments=(arch/arm64/configs/kaanapali-oneplus-infiniti_defconfig)
 for f in baldur baldur-display baldur-netfilter baldur-extra; do fragments+=("$repo/kernel/config/$f.fragment"); done
-[ "$profile" != san-flavored ] || fragments+=("$repo/custom/config/ubuntu-security.fragment")
+[ "$profile" != san-flavored ] || fragments+=(
+  "$repo/custom/config/ubuntu-security.fragment"
+  "$repo/custom/config/tun-policy-routing.fragment"
+)
 scripts/kconfig/merge_config.sh -m -O "$kout" "$kout/.config" "${fragments[@]}"
 # CI/local artifacts use unique names, deliberately outside the release tNN channel.
 ident=${GITHUB_RUN_ID:-$SOURCE_DATE_EPOCH}.${GITHUB_RUN_ATTEMPT:-1}
@@ -73,6 +76,9 @@ make "${make_args[@]}" olddefconfig
 if [ "$profile" = san-flavored ]; then
   grep -qx 'CONFIG_SECURITY_APPARMOR=y' "$kout/.config"
   grep '^CONFIG_LSM=' "$kout/.config" | grep -q apparmor
+  for symbol in TUN IP_ADVANCED_ROUTER IP_MULTIPLE_TABLES IPV6_MULTIPLE_TABLES FIB_RULES; do
+    grep -qx "CONFIG_$symbol=y" "$kout/.config"
+  done
 fi
 make "${make_args[@]}" -j"$jobs" Image qcom/kaanapali-lenovo-baldur-display.dtb modules headers_install
 make "${make_args[@]}" INSTALL_MOD_PATH="$mods" INSTALL_MOD_STRIP=1 modules_install
@@ -115,6 +121,9 @@ git rev-parse HEAD > "$assets/patched-linux-commit.txt"
 dpkg-query -W > "$assets/build-packages.txt"
 printf '%s\n' "$rel" > "$assets/kernelrelease.txt"
 tar -C "$repo" -czf "$assets/patches-and-module-sources.tar.gz" kernel/patches kernel/config kernel/out-of-tree/aw882xx custom
+if [ "$profile" = san-flavored ]; then
+  tar -C "$repo" -czf "$assets/rtc-userspace.tar.gz" custom/rtc
+fi
 if [ "${USE_CCACHE:-0}" = 1 ]; then
   ccache --show-stats > "$assets/ccache-stats.txt"
 fi
