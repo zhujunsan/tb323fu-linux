@@ -123,6 +123,13 @@ printf '%s\n' "$rel" > "$assets/kernelrelease.txt"
 tar -C "$repo" -czf "$assets/patches-and-module-sources.tar.gz" kernel/patches kernel/config kernel/out-of-tree/aw882xx custom
 if [ "$profile" = san-flavored ]; then
   tar -C "$repo" -czf "$assets/rtc-userspace.tar.gz" custom/rtc
+  tar -C "$repo" -czf "$assets/dp-audio-userspace.tar.gz" \
+    custom/audio firmware/audio \
+    userspace/platform/alsa/ucm2/conf.d/kaanapali/LENOVO-TB323FU.conf \
+    userspace/platform/alsa/ucm2/Lenovo/TB323FU/HiFi.conf \
+    userspace/platform/libexec/tb323fu-dsp \
+    userspace/platform/libexec/tb323fu-audio-defaults \
+    userspace/platform/systemd/system/tb323fu-dsp.service
 fi
 if [ "${USE_CCACHE:-0}" = 1 ]; then
   ccache --show-stats > "$assets/ccache-stats.txt"
