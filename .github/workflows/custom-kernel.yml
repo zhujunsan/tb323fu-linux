@@ -127,3 +127,50 @@ jobs:
           include-hidden-files: true
           compression-level: 0
           retention-days: 3
+
+  publish:
+    name: Publish verified testing release
+    needs: [audit, kernel]
+    if: (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]'))
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify draft identity and publish as prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_TAG: ${{ inputs.release_tag }}
+        run: |
+          export RELEASE_TAG
+          RELEASE_TAG=$(python3 - <<'PY'
+          import json, os
+          v = json.load(open('custom/version.json'))
+          print(os.environ.get('REQUESTED_TAG') or 'san-v' + v['version'] + '-' + v['upstream_kernel'])
+          PY
+          )
+          python3 custom-build/ci/stage-kernel-release.py --check
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          tag = os.environ['RELEASE_TAG']
+          repo = os.environ['GITHUB_REPOSITORY']
+          release = json.loads(subprocess.check_output([
+              'gh', 'release', 'view', tag, '--repo', repo,
+              '--json', 'assets,body,isDraft']))
+          version = json.load(open('custom/version.json'))
+          expected = {'Image-tb323fu-' + version['upstream_kernel'] + '.gz',
+                      'kernel-artifacts.tar.gz', 'kernel-SHA256SUMS'}
+          assets = {a['name']: a for a in release['assets']}
+          assert release['isDraft'] and expected <= assets.keys(), 'Missing draft assets'
+          assert all(assets[name]['size'] > 0 for name in expected), 'Empty release asset'
+          notes = release['body'].replace('构建与核验进行中，通过后发布。', '')
+          notes += ('\n\nGitHub Actions 已完成构建、测试与产物校验：'
+                    'https://github.com/' + repo + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
+                    + '\n源码提交：' + os.environ['GITHUB_SHA']
+                    + '\n下载文件可用 kernel-SHA256SUMS 校验。\n')
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'release-notes.md'
+          path.write_text(notes)
+          subprocess.run(['gh', 'release', 'edit', tag, '--repo', repo,
+                          '--draft=false', '--prerelease', '--notes-file', str(path)],
+                         check=True)
+          PY
