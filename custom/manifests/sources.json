@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "joonhoekim/tb323fu-linux",
-    "commit": "3cc8131f84d0450a4534d1e57d657c8dbe0c26f5"
+    "commit": "1508c247c8c833e7f742e58b4a870450309fd954"
   },
   "linux": {
     "repository": "https://github.com/torvalds/linux.git",
@@ -210,7 +210,8 @@
     "0202-drm-msm-dp-suspend-and-resume-the-MST-topology-acros.patch": "9cb9614d698c0978f0cc41419f9b74c34a7a09f03129e005e4958a20ad64dc82",
     "0203-drm-msm-dp-keep-the-PHY-when-an-MST-stream-is-disabl.patch": "664ae18708ab8bd4a599131a308673d91e77316871a13989552f9bbfb767ce0b",
     "0205-drm-msm-dp-ignore-sink-requests-from-IRQ_HPD-while-t.patch": "743476e880631af81e7e3fb530a550775a165ac9d908f2e92cebb2783cd8d751",
-    "0206-media-iris-Fix-iova-allocation-from-restrict-region.patch": "b504fe3eed372b1173c4f3e24e8d1d87863f25d7a38b6810fe32d0e4816002c5"
+    "0206-media-iris-Fix-iova-allocation-from-restrict-region.patch": "b504fe3eed372b1173c4f3e24e8d1d87863f25d7a38b6810fe32d0e4816002c5",
+    "0207-arm64-dts-qcom-kaanapali-lenovo-baldur-Add-DisplayPo.patch": "8326550d389fe943fa3ec00a22856abaadf160e76494ada8a772ffb9fcf8532e"
   },
   "candidates": [
     {
@@ -655,7 +656,7 @@
       "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     }
   ],
-  "audited": "2026-11-08",
+  "audited": "2026-11-14",
   "previous_verified_build": {
     "project_commit": "10fa3f366f1be21aa6748f4616249496c1b20754",
     "upstream_commit": "2ba0908546b482792d3bf03a102799060b90553e",
@@ -671,7 +672,7 @@
     "source_commit": "3cc8131f84d0450a4534d1e57d657c8dbe0c26f5",
     "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t61",
     "usage": "Upstream Image/modules/config reference; routine CI builds only san-flavored",
-    "kernel_inputs_match_current_upstream": true
+    "kernel_inputs_match_current_upstream": false
   },
   "previous_device_report": {
     "date": "2026-11-07",
