@@ -22,7 +22,14 @@ def stage(repo, environment, check_only=False):
     release = json.loads(subprocess.check_output(['gh', 'release', 'view', tag,
                         '--repo', repository, '--json', 'isDraft,targetCommitish']))
     assert release['isDraft'], 'Only an existing draft may receive build outputs'
-    assert release['targetCommitish'] == environment['GITHUB_SHA'], 'Draft/CI source mismatch'
+    target = release['targetCommitish']
+    if target != environment['GITHUB_SHA']:
+        # GitHub's release UI stores a branch name. Resolve it and still
+        # require the exact CI commit, rejecting any intervening branch move.
+        target = subprocess.check_output(['gh', 'api',
+                    f'repos/{repository}/commits/{target}', '--jq', '.sha'],
+                    text=True).strip()
+    assert target == environment['GITHUB_SHA'], 'Draft/CI source mismatch'
     if check_only:
         print('Draft source identity checked')
         return
