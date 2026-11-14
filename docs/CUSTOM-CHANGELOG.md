@@ -1,5 +1,26 @@
 # san-flavored kernel versions
 
+## 0.4.0 (2026-11-14, testing)
+
+Updates upstream to `1508c24`: DisplayPort/HDMI audio (patch 0207, audio
+topology and UCM) and resilient DSP startup. Linux stays v7.3; the helper ABI
+suffix stays t61 because upstream has not published a newer numbered kernel.
+The t61 release is now only a baseline reference, not an identical kernel input.
+All 28 custom patches and the independent libcamera 0.2.0 component are retained.
+
+Includes the previously committed TUN/policy-routing configuration and Qualcomm
+RTC restore files. Kernel updates do not install userspace automatically.
+`kernel-artifacts.tar.gz` includes `dp-audio-userspace.tar.gz`; extract that
+archive, then run `sudo sh custom/audio/install.sh` from its extracted root.
+Install the matching kernel and reboot to load the new DSP topology. The RTC
+archive remains separate; install it with `sudo sh custom/rtc/install.sh`.
+
+Upstream reports DP and HDMI playback and normal unplug fallback; an application
+stream pinned to the display can require an application restart after unplug.
+Audio over MST remains untested. This release requires a successful full CI
+build and artifact verification; local source checks are not hardware validation.
+See [the synchronization report](UPSTREAM-SYNC-2026-11-14.md) for downstream review.
+
 ## 0.3.0 (2026-11-08, testing)
 
 Updates the upstream base to kernel-t61 / `3cc8131`, with 198 upstream patches
