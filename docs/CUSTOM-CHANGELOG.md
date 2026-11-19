@@ -1,5 +1,23 @@
 # san-flavored kernel versions
 
+## 0.5.0 (2026-11-20, testing)
+
+Updates upstream to kernel-t63 / `38caae7`, with 203 upstream patches and
+28 custom patches. Linux is pinned to v7.3 (`c03c1a1`).
+
+- Disables direct PMIC RTC-to-system-clock initialization (0214), preventing
+  the clock from jumping back toward 1970 after systemd restores saved time.
+  The custom Android TOD-offset restore continues to provide offline time.
+- Adds the fixed permanent Wi-Fi MAC patches (0209-0210). Install the platform
+  files from Open Device Helper 0.4.9 for the matching ath12k module option.
+- Replaces the earlier USB/DP-only patches with the reviewed v4 series
+  (0211-0213) and adds the stock 6 mA microSD pad drive (0215).
+
+The existing DP-audio and RTC companion archives are included. Kernel updates
+alone do not install their userspace components. Autofocus remains 0.2.0.
+Publication requires a successful audit and kernel CI build. Device boot,
+suspend, network and audio behavior still need validation on this tablet.
+
 ## 0.4.0 (2026-11-14, testing)
 
 Updates upstream to `1508c24`: DisplayPort/HDMI audio (patch 0207, audio

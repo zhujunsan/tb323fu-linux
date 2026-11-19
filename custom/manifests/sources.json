@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "joonhoekim/tb323fu-linux",
-    "commit": "1508c247c8c833e7f742e58b4a870450309fd954"
+    "commit": "38caae7d111f05e2b0699d0b3be8727cf0410853"
   },
   "linux": {
     "repository": "https://github.com/torvalds/linux.git",
@@ -141,8 +141,6 @@
     "0132-power-supply-qcom_battmgr-expose-the-charge-current-l.patch": "4d91da7fe124553f7e3e21d8b5245f5b9dfdd70f228f66cd960a28f2b2040ba6",
     "0133-phy-qcom-qmp-combo-Leave-the-USB-PCS-alone-in-DP-onl.patch": "479f6b426bba70d149ce59dc8e6a6a83f9b1f465ff260480acdbef335c42c1c6",
     "0134-usb-typec-mux-fsa4480-keep-the-USB-2.0-switch-on-in-.patch": "fbeb2dee06db7008d31e433457864e17027236348eaa2421d8c876889c30ddc3",
-    "0135-dt-bindings-usb-qcom-snps-dwc3-Add-mode-switch.patch": "c20c71bcef2d89f7b2c4473b5904757cbb7e2acc98ad222e3cb0fd3fe0169f84",
-    "0136-usb-dwc3-qcom-Use-the-UTMI-clock-as-PIPE-clock-in-Di.patch": "fda21dc98c794d1d0bd8a3ae922a0d74eccdedb1d272c855b7dcb76fc03ffdc0",
     "0137-drm-msm-dp-Don-t-redo-the-plug-handling-for-a-sink-t.patch": "819ebe5e8eb4019dd3fd6872c8a6be5c6831f2a8a79be7cb49f865b8ebc07038",
     "0138-arm64-dts-qcom-kaanapali-Mark-the-USB3-DP-PHY-as-a-T.patch": "939a0aefc12d2cd4b15b861421f202ec0161f18d4e08e47560c5facf83dd739f",
     "0139-arm64-dts-qcom-baldur-Four-lane-HBR3-DisplayPort.patch": "71840cf5f71c19fb9c786bd00eae42dacada4ce984d3caa76c1b7d175779e302",
@@ -154,7 +152,6 @@
     "0146-input-nt36536-report-the-pen-pressure-range-0.4095.patch": "d6a9beb22c7d422b44cf9791a25aa5c05cbe54246ba29f74450a72e95860ce71",
     "0147-usb-typec-ucsi-Leave-the-mux-to-the-altmode-driver-f.patch": "7353ccb93231c5ec11696614cff2b0b092bf5c95620cffe8d6f1014162808993",
     "0148-arm64-configs-baldur-drop-no_console_suspend-from-th.patch": "bd9ca58e00dadbfab13792aef4a0eea5d1924a33e71341751349dc187745d0a5",
-    "0149-usb-dwc3-qcom-Leave-DP-only-mode-from-the-mux-callba.patch": "fb3f6ce16e9f81a38c7ef16362ffa1c569cec99d3c7547ecbcdcd8e42c638afa",
     "0150-drm-msm-dp-Track-the-PHY-power-and-link-clock-state.patch": "03f6d92dd65c8f0fe50c8d9185838501d8f792ce669d6a34a3bd034966ebe6c2",
     "0151-drm-msm-dp-Release-the-PHY-init-when-the-link-is-not.patch": "3c06f42319c69716876de7b894b545beb53558d89d30497e754b73380554cbe9",
     "0152-mmc-sd-Keep-the-card-when-its-extension-registers-fa.patch": "5fc19deafa742e073d8e29da79abc253ba9d500d9452e283444c334f8170a912",
@@ -211,7 +208,14 @@
     "0203-drm-msm-dp-keep-the-PHY-when-an-MST-stream-is-disabl.patch": "664ae18708ab8bd4a599131a308673d91e77316871a13989552f9bbfb767ce0b",
     "0205-drm-msm-dp-ignore-sink-requests-from-IRQ_HPD-while-t.patch": "743476e880631af81e7e3fb530a550775a165ac9d908f2e92cebb2783cd8d751",
     "0206-media-iris-Fix-iova-allocation-from-restrict-region.patch": "b504fe3eed372b1173c4f3e24e8d1d87863f25d7a38b6810fe32d0e4816002c5",
-    "0207-arm64-dts-qcom-kaanapali-lenovo-baldur-Add-DisplayPo.patch": "8326550d389fe943fa3ec00a22856abaadf160e76494ada8a772ffb9fcf8532e"
+    "0207-arm64-dts-qcom-kaanapali-lenovo-baldur-Add-DisplayPo.patch": "8326550d389fe943fa3ec00a22856abaadf160e76494ada8a772ffb9fcf8532e",
+    "0209-wifi-ath12k-Support-MAC-address-from-the-firmware-no.patch": "da66da79a40888017a6b0ab6f5bd1430e94eb82f8bc2dd3795a3f23eb2770463",
+    "0210-wifi-ath12k-baldur-take-the-permanent-MAC-address-fr.patch": "eea9e67251c4e1b636d79ec9234548da148fdc9ac7941639167e040d81a4c53a",
+    "0211-usb-dwc3-qcom-Restore-UTMI-PIPE-clock-on-resume.patch": "5035f1b0d1b68f71e6c7e652202fc03731e622968c68f65f61db7bb0506f8e06",
+    "0212-dt-bindings-usb-qcom-snps-dwc3-Add-mode-switch.patch": "dbfd9ace4d328ec3d19c8d43e5eb5f5d5dd051112d2a625b2dc33a5501174171",
+    "0213-usb-dwc3-qcom-Use-the-UTMI-clock-as-PIPE-clock-in-Di.patch": "4cdd34de7561a13c3be2d4a8d04feb8216dc89ff1fb3e3555930090fcc4bb7b6",
+    "0214-arm64-configs-baldur-do-not-set-the-clock-from-the-P.patch": "bd7362a0a1256cef74cf1ea3d752c80e76482240b0047e147f452eb1138a6ffb",
+    "0215-arm64-dts-qcom-baldur-drive-the-SD-card-pads-at-6-mA.patch": "71e4f2f3518de1b0839ceb8bc0fd5671565994291ef3d2ed8278c8fd56f60733"
   },
   "candidates": [
     {
@@ -656,7 +660,7 @@
       "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     }
   ],
-  "audited": "2026-11-14",
+  "audited": "2026-11-20",
   "previous_verified_build": {
     "project_commit": "10fa3f366f1be21aa6748f4616249496c1b20754",
     "upstream_commit": "2ba0908546b482792d3bf03a102799060b90553e",
@@ -668,11 +672,11 @@
   },
   "baseline_reference": {
     "repository": "joonhoekim/tb323fu-linux",
-    "release": "kernel-t61",
-    "source_commit": "3cc8131f84d0450a4534d1e57d657c8dbe0c26f5",
-    "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t61",
+    "release": "kernel-t63",
+    "source_commit": "18eddf44481c1d1f6905efe98b123f1d1ba0aa0b",
+    "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t63",
     "usage": "Upstream Image/modules/config reference; routine CI builds only san-flavored",
-    "kernel_inputs_match_current_upstream": false
+    "kernel_inputs_match_current_upstream": true
   },
   "previous_device_report": {
     "date": "2026-11-07",
