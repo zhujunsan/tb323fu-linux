@@ -8,7 +8,7 @@ The series by subsystem. Origin, author and status of each patch: [PROVENANCE.md
 
 | Area | Patches |
 |---|---|
-| Display: DPU, DSI, MDSS | 0007, 0008, 0009 (display clocks), 0023, 0029 (MDSS SMMU), 0032, 0050, 0052, 0065, 0079, 0081-0083 (INT2 GDSC), 0097, 0105, 0110 (idle refresh rate), 0131 (colour management without a modeset) |
+| Display: DPU, DSI, MDSS | 0007, 0008, 0009 (display clocks), 0023, 0029 (MDSS SMMU), 0032, 0050, 0052, 0065, 0079, 0081-0083 (INT2 GDSC), 0097, 0105, 0110 (idle refresh rate), 0216 (its timeouts at the slowest rate), 0131 (colour management without a modeset) |
 | DSI panel and backlight | 0019 (second DSI in the SoC DT), 0020, 0066, 0109 (NT36523 CSOT panel modes), 0142 (144 Hz), 0144 (physical size), 0028 (AW99706 backlight) |
 | DisplayPort and the USB-C combo PHY | 0051, 0057, 0098, 0101, 0102, 0137 (no re-probe of a set-up sink), 0155 (a sink attached at boot), 0157-0199 (IRQ_HPD events v8 and DisplayPort MST v7, both under review upstream), 0200-0203, 0205 (MST fixes: a boot deadlock, one LM per monitor with colour management, topology suspend/resume, PHY kept while the MST link is up; no link maintenance from IRQ_HPD while the link is down, a hang with a monitor attached at boot), 0138, 0139 (four-lane HBR3, e.g. 5120×2160 (21:9) at 75 Hz); PHY 0096, 0099, 0100, 0133 (DP-only mode across suspend); 0150, 0151 (DP PHY released after an unplug, so USB survives the next suspend) |
 | USB and Type-C | 0036 (NCM gadget), 0059 (USB GDSCs), 0060 (pmic_glink altmode), 0061 (UCSI), 0147 (UCSI leaves the mux to the altmode driver), 0062, 0104 (dwc3), 0134 (FSA4480 in DP-only modes), 0211-0213 (dwc3 UTMI clock in DP-only modes, v4 as sent upstream) |
@@ -19,12 +19,12 @@ The series by subsystem. Origin, author and status of each patch: [PROVENANCE.md
 | GPU | 0001-0006 (GPU DT, queued for v7.4), 0010 and its revert 0080 |
 | CPU idle and capacity | 0031, 0106, 0118 (PSCI domains and cluster idle), 0117 (capacity-dmips-mhz) |
 | Thermal | 0108 |
-| Storage (UFS, microSD) | 0119 (MCQ: multiple I/O queues), 0128 (keeps the MCQ state over suspend), 0129 (clock scaling deadlock), 0141 (MCQ interrupts after an error-handler reset); microSD 0152 (keeps the card when its extension registers or cache enable fail), 0215 (pads at 6 mA, as the stock firmware) |
+| Storage (UFS, microSD) | 0119 (MCQ: multiple I/O queues), 0128 (keeps the MCQ state over suspend), 0129 (clock scaling deadlock), 0141 (MCQ interrupts after an error-handler reset); microSD 0152 (keeps the card when its extension registers or cache enable fail), 0215 (pads at 6 mA, as the stock firmware), 0223 (slot limited to 100 MHz: CRC errors at 202 MHz) |
 | Memory bus scaling | 0120-0127 (memlat in CPUCP firmware over the SCMI Qualcomm vendor protocol: DDR, LLCC, DDR_QOS) |
 | Clocks and power domains | 0046, 0072, 0073, 0103 |
 | Wi-Fi, Bluetooth, PCIe | 0024, 0058, 0113, 0209, 0210 (ath12k; 0209-0210: a fixed permanent MAC address), 0030, 0130 (Bluetooth), 0049, 0056 (PCIe), 0078 |
 | Remoteproc and QRTR | 0114 (QRTR name service; the modem) |
-| Input, haptics, LEDs | 0025-0027, 0053 (NT36536 touch and pen), 0143, 0145, 0146, 0153 (Tab Pen Plus report formats, pressure range, tilt axes), 0038 (AW86937 haptics), 0048, 0154 (AW22127 LED ring: color effects, zones, LED current) |
+| Input, haptics, LEDs | 0025-0027, 0053 (NT36536 touch and pen), 0143, 0145, 0146, 0153 (Tab Pen Plus report formats, pressure range, tilt axes), 0217-0222 (AW86937 haptics), 0048, 0154 (AW22127 LED ring: color effects, zones, LED current) |
 | Storage | 0012 (UFS) |
 | Board device tree, config, boot | 0054 (board DTs), 0055 (config fragments), 0148 (no `no_console_suspend`), 0156 (dwc3 glue built in), 0214 (system clock not set from the PMIC RTC), 0011 (defconfig fragment), 0021 (built-in DTB), 0022 (boot progress marks, debug) |
 
@@ -104,8 +104,9 @@ The speakers need the Awinic aw882xx amplifier driver, which is not in upstream 
 [`out-of-tree/aw882xx/`](out-of-tree/aw882xx/); build it against the same kernel build and install it in `extra/`:
 
 ```sh
-make -C linux-tb323fu O=out ARCH=arm64 LLVM=1 M=$PWD/kernel/out-of-tree/aw882xx CONFIG_SND_SOC_AW882XX=m modules
-# -> snd-soc-aw882xx.ko into /lib/modules/<release>/extra/, then depmod
+make -C linux-tb323fu O=out ARCH=arm64 LLVM=1 LOCALVERSION= M=$PWD/kernel/out-of-tree/aw882xx CONFIG_SND_SOC_AW882XX=m \
+    INSTALL_MOD_PATH=$PWD/mods INSTALL_MOD_DIR=extra modules modules_install
+# -> mods/lib/modules/<release>/extra/snd-soc-aw882xx.ko, then depmod
 ```
 
 ## Device tree
