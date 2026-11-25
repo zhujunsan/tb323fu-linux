@@ -62,6 +62,7 @@ for f in baldur baldur-display baldur-netfilter baldur-extra; do fragments+=("$r
 [ "$profile" != san-flavored ] || fragments+=(
   "$repo/custom/config/ubuntu-security.fragment"
   "$repo/custom/config/tun-policy-routing.fragment"
+  "$repo/custom/config/owner-devices.fragment"
 )
 scripts/kconfig/merge_config.sh -m -O "$kout" "$kout/.config" "${fragments[@]}"
 # CI/local artifacts use unique names, deliberately outside the release tNN channel.
@@ -75,6 +76,7 @@ scripts/config --file "$kout/.config" --set-str LOCALVERSION "$localversion" --d
 make "${make_args[@]}" olddefconfig
 if [ "$profile" = san-flavored ]; then
   grep -qx 'CONFIG_SECURITY_APPARMOR=y' "$kout/.config"
+  grep -qx 'CONFIG_HID_MAGICMOUSE=m' "$kout/.config"
   grep '^CONFIG_LSM=' "$kout/.config" | grep -q apparmor
   for symbol in TUN IP_ADVANCED_ROUTER IP_MULTIPLE_TABLES IPV6_MULTIPLE_TABLES FIB_RULES; do
     grep -qx "CONFIG_$symbol=y" "$kout/.config"

@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Magic Mouse 2 scrolling and middle click, from downstream y20
+# (39ac88f88dd395faebe05d7f27caf4d3b9d99f3b, linux/kernel-y8/owner-devices.fragment).
+CONFIG_HID_MAGICMOUSE=m

@@ -1,5 +1,25 @@
 # san-flavored kernel versions
 
+## 0.6.0 (2026-11-25, pending)
+
+Updates to [kernel-t65](https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t65)
+(`38f6c9a`), with 210 upstream patches and 28 custom kernel patches on Linux v7.3.
+The interim [t64 release](https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t64)
+updated DPU idle-refresh timeouts, AW86937 haptics and the second DSI link.
+T65 caps microSD at 100 MHz to avoid read errors observed at 202 MHz, with lower
+peak throughput. [Open Device Helper 0.4.10](https://github.com/joonhoekim/tb323fu-linux/releases/tag/helper-v0.4.10)
+uses a clean shutdown path when switching to Android from a running Linux root.
+
+The [downstream y18–y20 refresh](https://github.com/bobsixsixsix-boop/legion-y700-gen5/commit/39ac88f88dd395faebe05d7f27caf4d3b9d99f3b)
+builds on t52. Its y18 backports are already represented in the newer upstream
+base. The y20 change `CONFIG_HID_MAGICMOUSE=m` is enabled for the custom profile,
+so Magic Mouse 2 can use the in-tree driver for scrolling and middle click.
+Downstream's KDE dock and window management target a separate desktop stack.
+The proposed AOSS/QMP statistics patch (1059) is still queued downstream.
+
+Autofocus stays at 0.2.0. The TUN routing, RTC restore and DP-audio components
+continue to ship in the custom build. Device boot and peripheral tests are pending.
+
 ## 0.5.0 (2026-11-20, testing)
 
 Updates upstream to kernel-t63 / `38caae7`, with 203 upstream patches and

@@ -14,7 +14,7 @@ synchronization sets the clock once Wi-Fi is up. To set the clock before connect
 below. The time zone comes from the PC you built on. A Wi-Fi icon with a `?` means the internet check failed; it
 usually clears within a minute.
 
-**san-flavored t61 time and TUN fix:** the custom kernel enables IPv4 and IPv6 policy routing, which Mihomo's
+**san-flavored RTC restore and TUN routing:** the custom kernel enables IPv4 and IPv6 policy routing, which Mihomo's
 TUN `auto-route` needs in addition to `CONFIG_TUN`. Install the RTC userspace component once in each Linux root
 with `sudo sh custom/rtc/install.sh` from this checkout, or extract the CI artifact's `rtc-userspace.tar.gz` first
 and run the same command. This enables `tb323fu-rtc-restore.service` before network time clients. It restores an
