@@ -10,10 +10,6 @@ on:
         description: Upload successful kernel outputs to this existing draft release
         type: string
         default: ''
-      build_baseline:
-        description: Also rebuild the original upstream baseline for an explicit investigation
-        type: boolean
-        default: false
 permissions:
   contents: read
   actions: read
@@ -41,15 +37,10 @@ jobs:
     permissions:
       contents: write
       actions: read
-    name: ${{ matrix.profile }}
+    name: Build san-flavored kernel
     needs: audit
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 180
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix:
-        profile: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.build_baseline && '["san-flavored","baseline"]' || '["san-flavored"]') }}
     steps:
       - uses: actions/checkout@v7
       - name: Read custom release identity
@@ -84,16 +75,16 @@ jobs:
           echo "Remote cache enabled: $enabled (only with repository limit <= 10 GB)"
       - name: Restore compiler cache
         if: steps.cache-policy.outputs.enabled == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
-          path: out/ccache-${{ matrix.profile }}
-          key: ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-${{ matrix.profile }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/ccache-san-flavored
+          key: ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-san-flavored-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
-            ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-${{ matrix.profile }}-
+            ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-san-flavored-
       - name: Install native ARM64 build dependencies
         run: bash custom-build/ci/install-deps.sh
       - name: Check requested draft release identity
-        if: matrix.profile == 'san-flavored' && ((github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')))
+        if: (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]'))
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag || format('san-{0}', steps.version.outputs.name) }}
@@ -102,28 +93,26 @@ jobs:
         env:
           BUILD_JOBS: '4'
           USE_CCACHE: '1'
-          PROFILE: ${{ matrix.profile }}
-        run: bash custom-build/scripts/build-kernel.sh "$PROFILE"
+        run: bash custom-build/scripts/build-kernel.sh san-flavored
       - name: Prepare artifacts within repository storage budget
         id: package
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-          PROFILE: ${{ matrix.profile }}
           BUILD_RESULT: ${{ job.status }}
-        run: python3 custom-build/ci/prepare-upload.py "$PROFILE" "$BUILD_RESULT"
+        run: python3 custom-build/ci/prepare-upload.py san-flavored "$BUILD_RESULT"
       - name: Stage verified kernel in the requested draft release
-        if: success() && matrix.profile == 'san-flavored' && ((github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')))
+        if: success() && ((github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')))
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag || format('san-{0}', steps.version.outputs.name) }}
         run: python3 custom-build/ci/stage-kernel-release.py
       - name: Upload bounded artifacts and diagnostics
         if: always() && steps.package.outputs.upload == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.profile }}-${{ steps.version.outputs.name }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: out/upload-${{ matrix.profile }}/
+          name: san-flavored-${{ steps.version.outputs.name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/upload-san-flavored/
           include-hidden-files: true
           compression-level: 0
           retention-days: 3

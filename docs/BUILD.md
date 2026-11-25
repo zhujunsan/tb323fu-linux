@@ -52,10 +52,8 @@ image and upstream tooling; this job performs no partition writes.
 Routine CI builds only san-flavored after the fast checks. The original upstream
 baseline already passed our initial toolchain validation; upstream releases can
 also be used as control artifacts after recording their source/config versions.
-Do not assume the latest release represents current upstream main. Rebuilding
-baseline is opt-in (`build_baseline=true` for workflow_dispatch, where available,
-or the local build script) for toolchain changes or regression investigations.
-If explicitly selected, both profiles run in parallel and must succeed.
+Do not assume the latest release represents current upstream main. Use the local
+`baseline` build above for toolchain changes or regression investigations.
 The default batch enables all 28 pinned y16 patches. The separate y17 initramfs
 fsck behavior is not part of this kernel patch stack. The deep system-domain
 power-off parameter remains disabled by default. Actual power/throughput impact
@@ -73,13 +71,13 @@ branch push triggers initially.
 The first green run took 48m35s for baseline and 51m03s for integration (the
 former name of san-flavored), serially.
 Both used only two compilation jobs and no compiler cache. Routine builds now
-use the standard public-repository `ubuntu-24.04-arm` runner, four compiler jobs
-and only the san-flavored profile by default. Only the board's display DTB is
+use the standard public-repository `ubuntu-24.04-arm` runner and four compiler jobs
+for san-flavored. Only the board's display DTB is
 built, not DTBs for unrelated machines. No kernel config/features are trimmed.
 Cold-build speedup must be measured in the new run; no fixed duration is promised.
 
-Set `USE_CCACHE=1` to use compiler caching locally. CI keeps a separate compressed
-ccache for each profile, capped at 2 GiB, and checks compiler content for validity.
+Set `USE_CCACHE=1` to use compiler caching locally. CI keeps a compressed
+ccache capped at 2 GiB and checks compiler content for validity.
 No unsafe cache-sloppiness settings are used. New CI identities still force the
 necessary version/module regeneration and final linking. The first run is cold;
 later hits depend on changed sources/config and eviction. Ccache stats are saved
@@ -87,8 +85,7 @@ with successful build outputs and printed in the job log even after build failur
 Remote caching is used only if the repository cache cap is at most 10 GiB. It is
 never increased by the workflow; older snapshots are evicted by GitHub at the cap.
 
-Build outputs remain complete in each job, but baseline uploads diagnostics only;
-san-flavored uploads its complete outputs in `kernel-artifacts.tar.gz` (which
+CI uploads the build outputs in `kernel-artifacts.tar.gz` (which
 contains `SHA256SUMS`). Retention is three days, and the already-compressed bundle
 is not compressed again by upload-artifact. A 100 MiB bundle cap and 400 MiB
 repository artifact soft budget prevent unbounded accumulation. If the cap is
