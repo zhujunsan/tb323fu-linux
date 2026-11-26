@@ -6,18 +6,45 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import tarfile
 import tempfile
+import urllib.error
 import urllib.request
 
 REPO = Path(__file__).resolve().parents[2]
 LOCK = json.loads((REPO / 'custom/manifests/sources.json').read_text())
 
 
-def download(repo, commit, path):
+def download_files(repo, commit, paths):
+    remaining = set(paths)
+    files = {}
+    for path in sorted(remaining):
+        try:
+            with urllib.request.urlopen(
+                f'https://raw.githubusercontent.com/{repo}/{commit}/{path}', timeout=90
+            ) as response:
+                files[path] = response.read()
+        except urllib.error.HTTPError as error:
+            if error.code != 429:
+                raise
+            break
+        remaining.remove(path)
+    if not remaining:
+        return files
+
+    # Fetch the same pinned revision in one request when raw file requests are throttled.
     with urllib.request.urlopen(
-        f'https://raw.githubusercontent.com/{repo}/{commit}/{path}', timeout=90
-    ) as response:
-        return response.read()
+        f'https://codeload.github.com/{repo}/tar.gz/{commit}', timeout=90
+    ) as response, tarfile.open(fileobj=response, mode='r|gz') as archive:
+        for entry in archive:
+            path = entry.name.partition('/')[2]
+            if path in remaining and entry.isfile():
+                with archive.extractfile(entry) as file:
+                    files[path] = file.read()
+                remaining.remove(path)
+                if not remaining:
+                    return files
+    raise SystemExit(f'Missing files in {repo}@{commit}: {", ".join(sorted(remaining))}')
 
 
 def run(*args, cwd):
@@ -35,9 +62,11 @@ def main():
         tree.mkdir()
         candidates = []
         paths = set()
+        source = LOCK['downstream']
+        downstream_files = download_files(source['repository'], source['commit'],
+                                          [candidate['path'] for candidate in LOCK['candidates']])
         for candidate in LOCK['candidates']:
-            source = LOCK['downstream']
-            data = download(source['repository'], source['commit'], candidate['path'])
+            data = downstream_files[candidate['path']]
             if hashlib.sha256(data).hexdigest() != candidate['sha256']:
                 raise SystemExit(f"Checksum mismatch: {candidate['path']}")
             patch = root / Path(candidate['path']).name
@@ -49,11 +78,12 @@ def main():
         for patch in (REPO / 'kernel/patches').glob('*.patch'):
             introduced.update(re.findall(r'^--- /dev/null\n\+\+\+ b/(.+)$',
                                          patch.read_text(encoding='utf-8'), re.M))
+        linux_files = download_files('torvalds/linux', LOCK['linux']['commit'], paths - introduced)
         for path in sorted(paths):
             target = tree / path
             target.parent.mkdir(parents=True, exist_ok=True)
             if path not in introduced:
-                target.write_bytes(download('torvalds/linux', LOCK['linux']['commit'], path))
+                target.write_bytes(linux_files[path])
         # Apply only hunks touching these files, including all upstream changes
         # to them. This is a scoped source audit, not a full-series apply check.
         for patch in sorted((REPO / 'kernel/patches').glob('*.patch')):
