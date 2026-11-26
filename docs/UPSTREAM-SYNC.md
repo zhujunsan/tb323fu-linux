@@ -11,15 +11,16 @@ This direct flow was explicitly confirmed by the owner on 2026-11-06.
    helper contracts. Update sources.json only after reviewing those changes.
 4. Check custom patches for conflicts and absorbed fixes. Remove absorbed
    patches explicitly with provenance; never silently skip failures.
-5. Run applicable local checks, commit the synchronization and source-lock
-   changes, and push san-flavored to trigger CI directly.
-6. Report san-flavored results separately from device validation; upstream
-   release artifacts or a prior verified build provide the baseline reference.
-   Device tests gate stable promotion. Never auto-publish a stable kernel.
+5. Update [release notes](../custom/release-notes.json) with the version's
+   changes, known limitations and device validation. The workflow fills in
+   source and build details using the [template](../custom-build/ci/kernel-release-notes.md).
+6. Run applicable local checks, commit the synchronization and source-lock
+   changes, and push san-flavored. After the audit and build succeed, CI uploads
+   verified assets and publishes the release on GitHub.
 
 CI covers source audit, helper workspace tests, packaging regression and an
 san-flavored build on san-flavored pushes. Baseline rebuilding is opt-in
 for explicit investigations, not a gate for routine builds. Record the last green
 source revision so that pending updates are not mistaken for validated builds.
-Scheduled upstream detection is not yet implemented. No device writes or
-stable release publication are part of source synchronization.
+Scheduled upstream detection is not yet implemented. Device validation is
+tracked separately and recorded in the release notes.

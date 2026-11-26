@@ -1,0 +1,12 @@
+{
+  "version": "0.6.1",
+  "upstream_kernel": "t66",
+  "changes": [
+    "同步到上游 kernel-t66，新增 BH201 microSD retimer 支持，默认 100 MHz。Linux 根分区在内置存储时，可向 `/sys/module/sd_retimer_o2/parameters/calibrate` 写入 `1`。下次插卡时会尝试校准，成功后可运行在 202 MHz。",
+    "保留 TUN 策略路由、RTC 恢复、DP 音频和 Magic Mouse 支持。"
+  ],
+  "known_issues": [
+    "校准开关重启后恢复默认值。当前镜像使用内置内核命令行，Linux 根分区在 microSD 上时无法启用校准。上游用两张卡验证过 202 MHz 校准。"
+  ],
+  "device_validation": "本版的平板启动、休眠和外设尚未实测。"
+}

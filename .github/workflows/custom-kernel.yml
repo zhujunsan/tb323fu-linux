@@ -3,11 +3,10 @@ name: san-flavored kernel
 on:
   push:
     branches: [san-flavored]
-    paths: ['custom/**', 'custom-build/**', '.github/workflows/custom-kernel.yml']
   workflow_dispatch:
     inputs:
       release_tag:
-        description: Upload successful kernel outputs to this existing draft release
+        description: Publish this release tag after a successful build (optional)
         type: string
         default: ''
 permissions:
@@ -21,6 +20,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+      - name: Validate version-specific release notes
+        if: github.ref == 'refs/heads/san-flavored' && (github.event_name == 'push' || inputs.release_tag != '')
+        run: python3 custom-build/ci/stage-kernel-release.py --check-notes
       - name: Audit locked custom patch stack
         run: python3 custom-build/scripts/audit-p0.py
       - name: Test artifact storage guard
@@ -83,12 +85,6 @@ jobs:
             ccache-v1-${{ runner.os }}-${{ runner.arch }}-llvm18-san-flavored-
       - name: Install native ARM64 build dependencies
         run: bash custom-build/ci/install-deps.sh
-      - name: Check requested draft release identity
-        if: (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]'))
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.release_tag || format('san-{0}', steps.version.outputs.name) }}
-        run: python3 custom-build/ci/stage-kernel-release.py --check
       - name: Build kernel and verify artifacts
         env:
           BUILD_JOBS: '4'
@@ -101,12 +97,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BUILD_RESULT: ${{ job.status }}
         run: python3 custom-build/ci/prepare-upload.py san-flavored "$BUILD_RESULT"
-      - name: Stage verified kernel in the requested draft release
-        if: success() && ((github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')))
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.release_tag || format('san-{0}', steps.version.outputs.name) }}
-        run: python3 custom-build/ci/stage-kernel-release.py
       - name: Upload bounded artifacts and diagnostics
         if: always() && steps.package.outputs.upload == 'true'
         uses: actions/upload-artifact@v7
@@ -116,50 +106,9 @@ jobs:
           include-hidden-files: true
           compression-level: 0
           retention-days: 3
-
-  publish:
-    name: Publish verified testing release
-    needs: [audit, kernel]
-    if: (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]'))
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v7
-      - name: Verify draft identity and publish as prerelease
+      - name: Publish verified kernel release
+        if: success() && github.ref == 'refs/heads/san-flavored' && (github.event_name == 'push' || inputs.release_tag != '')
         env:
           GH_TOKEN: ${{ github.token }}
-          REQUESTED_TAG: ${{ inputs.release_tag }}
-        run: |
-          export RELEASE_TAG
-          RELEASE_TAG=$(python3 - <<'PY'
-          import json, os
-          v = json.load(open('custom/version.json'))
-          print(os.environ.get('REQUESTED_TAG') or 'san-v' + v['version'] + '-' + v['upstream_kernel'])
-          PY
-          )
-          python3 custom-build/ci/stage-kernel-release.py --check
-          python3 - <<'PY'
-          import json, os, pathlib, subprocess
-          tag = os.environ['RELEASE_TAG']
-          repo = os.environ['GITHUB_REPOSITORY']
-          release = json.loads(subprocess.check_output([
-              'gh', 'release', 'view', tag, '--repo', repo,
-              '--json', 'assets,body,isDraft']))
-          version = json.load(open('custom/version.json'))
-          expected = {'Image-tb323fu-' + version['upstream_kernel'] + '.gz',
-                      'kernel-artifacts.tar.gz', 'kernel-SHA256SUMS'}
-          assets = {a['name']: a for a in release['assets']}
-          assert release['isDraft'] and expected <= assets.keys(), 'Missing draft assets'
-          assert all(assets[name]['size'] > 0 for name in expected), 'Empty release asset'
-          notes = release['body'].replace('构建与核验进行中，通过后发布。', '')
-          notes += ('\n\nGitHub Actions 已完成构建、测试与产物校验：'
-                    'https://github.com/' + repo + '/actions/runs/' + os.environ['GITHUB_RUN_ID']
-                    + '\n源码提交：' + os.environ['GITHUB_SHA']
-                    + '\n下载文件可用 kernel-SHA256SUMS 校验。\n')
-          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'release-notes.md'
-          path.write_text(notes)
-          subprocess.run(['gh', 'release', 'edit', tag, '--repo', repo,
-                          '--draft=false', '--prerelease', '--notes-file', str(path)],
-                         check=True)
-          PY
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: python3 custom-build/ci/stage-kernel-release.py

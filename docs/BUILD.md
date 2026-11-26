@@ -60,11 +60,15 @@ power-off parameter remains disabled by default. Actual power/throughput impact
 is unmeasured. To reproduce the old five-patch selection, set
 `PATCH_IDS=1041,1046,1047,1048,1052`. Set
 `PATCH_IDS=1046,1047,1048,1052` for a no-Wi-Fi-patch comparison build in a fresh
-work directory. No release is published automatically.
-The workflow is triggered by relevant pushes to san-flavored. A manual
-workflow_dispatch entry exists, but GitHub's manual workflow discovery requires
-the workflow to be present on the default branch; keep main pristine and use
-branch push triggers initially.
+work directory.
+
+Every push to `san-flavored` starts CI. A successful audit and kernel build
+publish a GitHub release with verified assets and links to the commit and CI run.
+Update `custom/release-notes.json` when changing the version or upstream base.
+The first release uses `san-v<VERSION>-t<NN>`. A later commit with the same
+version and baseline adds `-g<12-character SHA>` to the tag. A rerun for an
+already published commit reuses that release. Manual workflow runs build only
+unless a release tag is supplied.
 
 ## Free-runner performance and storage policy
 
