@@ -1,6 +1,19 @@
 # san-flavored kernel versions
 
-## 0.6.0 (2026-11-25, pending)
+## 0.6.1 (2026-11-26, pending)
+
+Updates to [kernel-t66](https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t66)
+(`2954bc8`), with 212 upstream patches and 28 custom kernel patches on Linux v7.3.
+Patches 0224–0226 add BH201 microSD retimer support and replace the t65
+static cap (0223). The slot runs at 100 MHz by default. Set
+`sd_retimer_o2.calibrate=1` to try calibration and 202 MHz operation. Upstream
+reports tests on two cards. Device validation of this san-flavored build is pending.
+
+The TUN routing, RTC restore, DP-audio and Magic Mouse support continue to ship.
+Libcamera autofocus stays at 0.2.0. The last successful san-flavored kernel CI
+run was for [0.6.0 / t65](https://github.com/zhujunsan/tb323fu-linux/actions/runs/45545371901).
+
+## 0.6.0 (2026-11-25, testing)
 
 Updates to [kernel-t65](https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t65)
 (`38f6c9a`), with 210 upstream patches and 28 custom kernel patches on Linux v7.3.

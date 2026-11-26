@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repository": "joonhoekim/tb323fu-linux",
-    "commit": "38f6c9adff49f6a1947142657af013c1090f9a9c"
+    "commit": "2954bc8fb53a0e23897b4867a2d31452f55cdfba"
   },
   "linux": {
     "repository": "https://github.com/torvalds/linux.git",
@@ -222,7 +222,9 @@
     "0220-Input-aw86927-add-support-for-Awinic-AW86937.patch": "13f5cc333d2ce44fa2775cc39696988174934aad60f4b8527cf04dd30f578e51",
     "0221-Input-aw86927-handle-the-AW8693X-play-and-boost-regi.patch": "79c303e42db9a5cd670eee7a527d3222ac83c86320c397820ca5f53168591acc",
     "0222-Input-aw86927-stop-playback-over-suspend-and-on-shut.patch": "af3a9b0791a041d99ed9a551cdae8c7a42b079c5e2ef469319963a064b2af7ff",
-    "0223-arm64-dts-qcom-baldur-limit-the-microSD-slot-to-100-.patch": "fd9ea7b569717ebed269dde1fa9d28f8b718e4e745244545ebe105e883e77e68"
+    "0224-dt-bindings-mmc-qcom-sdhci-msm-document-lenovo-bh201.patch": "9f665db2d017e19ca163a14daf767f6c3119f78da8ab25606c666b6b306a6b91",
+    "0225-mmc-sdhci-msm-support-the-BayHub-BH201-SD-retimer.patch": "686a2e9d9c79bc42eec71f4d1b6521d017b52653688e5ced5e0b5c2d6dc31651",
+    "0226-arm64-dts-qcom-baldur-describe-the-microSD-slot-s-BH.patch": "0ee3ec4237813a9cf04e19da7a69143dfab7a4a28668de29518a212504d4eff8"
   },
   "candidates": [
     {
@@ -667,7 +669,7 @@
       "provenance": "Pinned downstream patch; headers retained verbatim except recorded adaptations"
     }
   ],
-  "audited": "2026-11-25",
+  "audited": "2026-11-26",
   "previous_verified_build": {
     "project_commit": "10fa3f366f1be21aa6748f4616249496c1b20754",
     "upstream_commit": "2ba0908546b482792d3bf03a102799060b90553e",
@@ -679,9 +681,9 @@
   },
   "baseline_reference": {
     "repository": "joonhoekim/tb323fu-linux",
-    "release": "kernel-t65",
-    "source_commit": "38f6c9adff49f6a1947142657af013c1090f9a9c",
-    "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t65",
+    "release": "kernel-t66",
+    "source_commit": "2954bc8fb53a0e23897b4867a2d31452f55cdfba",
+    "url": "https://github.com/joonhoekim/tb323fu-linux/releases/tag/kernel-t66",
     "usage": "Upstream Image/modules/config reference; routine CI builds only san-flavored",
     "kernel_inputs_match_current_upstream": true
   },
@@ -698,11 +700,11 @@
     "result": "Owner reports successful tablet boot and working dual boot; no per-feature measurements claimed"
   },
   "latest_verified_custom_build": {
-    "project_commit": "8326c3ffb0c376d86d80b9036c512423ac53ea9f",
-    "ci_url": "https://github.com/zhujunsan/tb323fu-linux/actions/runs/44642142820",
+    "project_commit": "d2eb90ec741940bdd3b4f01ef708d682ebfcc55f",
+    "ci_url": "https://github.com/zhujunsan/tb323fu-linux/actions/runs/45545371901",
     "patch_count": 28,
     "kernel": "success",
     "device": "not-tested",
-    "date": "2026-11-20"
+    "date": "2026-11-25"
   }
 }
